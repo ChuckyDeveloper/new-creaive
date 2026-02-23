@@ -1,12 +1,4 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: "ROBOTO", sans-serif;
-}
+/* scoped to AnimateBackground – avoid global resets */
 
 .nav,
 .slider {
@@ -33,7 +25,7 @@ body {
 
 h1:hover {
   transform: translate3d(0, -10px, 22px);
-  color: #47C2CB;
+  color: #47c2cb;
 }
 
 .slider h2 {

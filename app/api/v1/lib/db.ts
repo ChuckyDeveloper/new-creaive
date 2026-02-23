@@ -8,10 +8,6 @@ function requireMongoUri() {
     return uri;
 }
 
-export function hasMongoUri() {
-    return Boolean(process.env.MONGODB_URI);
-}
-
 declare global {
     var __mongooseConn: Promise<typeof mongoose> | undefined;
 }

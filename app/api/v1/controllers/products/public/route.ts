@@ -63,7 +63,7 @@
 // app/api/v1/controllers/products/public/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { Types } from "mongoose";
-import { connectDB, hasMongoUri } from "../../../lib/db";
+import { connectDB } from "../../../lib/db";
 import ProductContent from "../../../models/ProductContent";
 import CustomerBrand from "../../../models/CustomerBrand";
 import { num, truthy } from "../../../lib/helper";
@@ -84,17 +84,6 @@ function splitCSV(v: string | null) {
 }
 
 export async function GET(req: NextRequest) {
-  if (!hasMongoUri()) {
-    return NextResponse.json({
-      mode: "paged",
-      page: 1,
-      limit: 0,
-      total: 0,
-      pages: 1,
-      items: [],
-    });
-  }
-
   try {
     await connectDB();
     const url = new URL(req.url);

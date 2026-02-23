@@ -1,6 +1,6 @@
 import { headers } from "next/headers";
 
-export const revalidate = 120; // cache SSR result for 2 minutes
+export const revalidate = 0; // per-request SSR for this page
 
 export type PaginatedResponse<T> = {
     mode: "all" | "paged";
@@ -40,20 +40,11 @@ export function getBaseUrl() {
     return `${proto}://${host}`;
 }
 
-async function fetchFromApi<T>(
-    path: string,
-    label: "brands" | "products" = "products",
-    fallback?: () => T,
-) {
+async function fetchFromApi<T>(path: string, label: "brands" | "products" = "products") {
     const base = getBaseUrl();
     const url = `${base}${path}`;
-    const res = await fetch(url, {
-        next: { revalidate },
-    });
+    const res = await fetch(url, { cache: "no-store" });
     if (!res.ok) {
-        if (fallback) {
-            return fallback();
-        }
         throw new Error(`Failed to load ${label} (${res.status})`);
     }
     return res.json() as Promise<T>;
@@ -69,7 +60,6 @@ export async function fetchProducts(query: string) {
     return fetchFromApi<PaginatedResponse<PublicProduct>>(
         `/api/v1/controllers/products/public${qs}`,
         "products",
-        () => ({ mode: "paged", page: 1, limit: 0, total: 0, pages: 1, items: [] }),
     );
 }
 
@@ -78,7 +68,6 @@ export async function fetchBrands(query: string) {
     return fetchFromApi<PaginatedResponse<PublicBrand>>(
         `/api/v1/controllers/brands/public${qs}`,
         "brands",
-        () => ({ mode: "paged", page: 1, limit: 0, total: 0, pages: 1, items: [] }),
     );
 }
 

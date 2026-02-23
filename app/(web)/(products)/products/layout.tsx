@@ -1,12 +1,15 @@
 import type { ReactNode } from "react";
 import Image from "next/image";
 import NavTabs from "./nav-tabs";
+import Navbar from "@/components/layout/nav";
 
-export const revalidate = 120;
+export const dynamic = "force-dynamic";
 
 export default function ProductsLayout({ children }: { children: ReactNode }) {
     return (
         <div className="min-h-screen bg-[#121212] text-white">
+            <Navbar />
+
             {/* Header */}
             <header
                 className="

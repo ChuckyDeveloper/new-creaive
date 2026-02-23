@@ -113,7 +113,7 @@ export default function CODEE() {
             content: msg.content ?? "",
             createdAt: msg.createdAt ?? null,
           };
-        },
+        }
       );
 
       setMessages(hydratedMessages);
@@ -122,7 +122,7 @@ export default function CODEE() {
     } catch (err) {
       console.error("Failed to initialise CODEE thread", err);
       setError(
-        "CODEE is having trouble connecting. Please try again in a moment.",
+        "CODEE is having trouble connecting. Please try again in a moment."
       );
       return null;
     } finally {
@@ -199,10 +199,7 @@ export default function CODEE() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            threadId: idToUse,
-            message: newMessage.content,
-          }),
+          body: JSON.stringify({ threadId: idToUse, message: newMessage.content }),
         });
 
         const data: {
@@ -234,12 +231,12 @@ export default function CODEE() {
           prev.map((msg) =>
             msg.id === placeholderId
               ? {
-                  ...msg,
-                  content: assistantReply,
-                  createdAt: new Date().toISOString(),
-                }
-              : msg,
-          ),
+                ...msg,
+                content: assistantReply,
+                createdAt: new Date().toISOString(),
+              }
+              : msg
+          )
         );
       } catch (err) {
         console.error("Failed to send message", err);
@@ -251,7 +248,7 @@ export default function CODEE() {
         setIsSending(false);
       }
     },
-    [threadId, isSending, sessionInfo.name],
+    [threadId, isSending, sessionInfo.name]
   );
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -269,7 +266,7 @@ export default function CODEE() {
       if (!readyThreadId) return;
       await sendMessage(faqText, readyThreadId);
     },
-    [initializeThread, sendMessage],
+    [initializeThread, sendMessage]
   );
 
   const composerDisabled = isInitializing || isSending || !threadId;
@@ -281,247 +278,228 @@ export default function CODEE() {
         : hasHistory
           ? "Continue with CODEE"
           : "Chat with CODEE",
-    [hasHistory, isOpen],
+    [hasHistory, isOpen]
   );
 
   // relative flex items-center justify-between gap-3 pl-4 pr-2 py-2 text-slate-900
 
   return (
-    <div className="pointer-events-none fixed bottom-5 right-5 z-[9999] flex flex-col items-end gap-3">
-      {/* ── Chat Panel ── */}
+    <div className="pointer-events-none fixed bottom-6 right-6 z-40 flex flex-col items-end gap-3 ">
       {isOpen ? (
         <div
-          className="pointer-events-auto flex w-[min(400px,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-3xl bg-white/95 shadow-[0_24px_64px_rgba(64,9,159,0.35)]"
+          className="pointer-events-auto flex w-[min(380px,calc(100vw-3rem))] flex-col overflow-hidden rounded-3xl shadow-[0_20px_50px_rgba(64,9,159,0.25)] bg-white/95"
           style={{ backgroundImage: PANEL_BACKDROP }}
         >
-        {/* Header */}
-        <div className="relative">
-          <div className="absolute inset-0 backdrop-blur-2xl" />
-          <header className="relative flex items-center justify-between gap-3 px-4 py-3 text-slate-900">
-            <div className="flex items-center gap-2.5">
-              <div className="relative flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-r from-primary-600 via-primary-400 to-complementary-500 text-xs font-bold text-white ring-2 ring-indigo-300/40">
-                C
-              </div>
+          <div className="relative">
+            <div className="absolute inset-0 backdrop-blur-2xl" />
+            <header className="relative flex items-center justify-between gap-3 pl-4 pr-2 py-2 text-slate-900">
               <div className="flex flex-col">
-                <span className="text-sm font-bold tracking-wide uppercase text-slate-800">
+                <span className="text-sm font-semibold tracking-wide uppercase text-slate-800">
                   {ASSISTANT_NAME}
                 </span>
-                <span className="text-[10px] text-slate-400 font-medium">
-                  AI Assistant
-                </span>
               </div>
-            </div>
-            <button
-              type="button"
-              onClick={() => setIsOpen(false)}
-              className="group rounded-full border border-slate-200/60 bg-white/70 p-1.5 text-slate-400 transition-all hover:border-rose-300 hover:bg-rose-50 hover:text-rose-500 w-8 h-8 flex items-center justify-center"
-              aria-label="Close chat"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
+              <button
+                type="button"
+                onClick={() => setIsOpen(false)}
+                className="rounded-full border border-slate-200/50 bg-white/60 p-1.5 text-slate-500 transition hover:border-slate-400 hover:text-slate-700 w-8 h-8 flex items-center justify-center"
+                aria-label="Close chat"
               >
-                <path d="M18 6 6 18" />
-                <path d="m6 6 12 12" />
-              </svg>
-            </button>
-          </header>
-        </div>
-
-        {/* Messages */}
-        <div className="relative flex h-[460px] flex-col">
-          <div className="absolute inset-0 bg-gradient-to-b from-white/60 via-white/10 to-white/20" />
-          <div className="relative flex-1 space-y-3 overflow-y-auto px-4 py-3">
-            {error && (
-              <div
-                role="alert"
-                className="rounded-xl border border-rose-200 bg-rose-50/80 px-3 py-2 text-xs text-rose-600 shadow-sm"
-              >
-                {error}
-              </div>
-            )}
-            {!hasHistory && !isInitializing && !error && (
-              <div className="space-y-3 pt-4">
-                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-r from-primary-600 via-primary-400 to-complementary-500 text-xl font-bold text-white ring-2 ring-indigo-200/40 shadow-lg">
-                  C
-                </div>
-                <p className="text-sm text-slate-500 text-center">
-                  สวัสดีค่ะ/ครับ 😊 วันนี้อยากให้ CODEE ช่วยอะไรดีเอ่ย?
-                </p>
-              </div>
-            )}
-            {isInitializing && (
-              <div className="flex items-center gap-3 rounded-xl border border-indigo-200/60 bg-white/50 px-3 py-2 text-sm text-slate-600">
-                <span className="inline-flex h-2.5 w-2.5 animate-pulse rounded-full bg-indigo-500" />
-                Connecting to CODEE...
-              </div>
-            )}
-            {messages.map((message, index) => {
-              const isAssistant = message.role === "assistant";
-              const alignment = isAssistant
-                ? "justify-start gap-2"
-                : "justify-end";
-              const bubbleTone = isAssistant
-                ? "bg-gradient-to-br from-[#904BFA]/40 via-[#7A4FE2]/30 to-[#B97BFF]/30 text-white shadow-lg"
-                : "bg-white/50 text-slate-900 border border-white/30 shadow-sm backdrop-blur";
-
-              return (
-                <div
-                  key={`${message.id}-${index}`}
-                  className={`flex ${alignment} animate-[fadeSlideUp_0.25s_ease-out]`}
-                >
-                  <div
-                    className={`max-w-[82%] rounded-2xl px-0 py-0 transition ${bubbleTone}`}
-                  >
-                    <div className="flex p-2 items-center">
-                      {isAssistant && (
-                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-r from-primary-600 via-primary-400 to-complementary-500 text-[10px] font-bold text-white">
-                          C
-                        </div>
-                      )}
-                      <span className="text-[11px] font-semibold uppercase tracking-wide opacity-80 text-gray-900 px-2">
-                        {isAssistant ? ASSISTANT_NAME : message.author || "You"}
-                      </span>
-                    </div>
-
-                    <p
-                      className={`mt-1 whitespace-pre-line text-sm leading-relaxed text-[#0e113f] px-2 pb-1 ${
-                        isAssistant ? "text-start" : "text-end"
-                      }`}
-                    >
-                      {message.content}
-                    </p>
-
-                    {message.createdAt && (
-                      <span className="my-1 block text-[10px] uppercase tracking-wider text-[#0e113f]/50 text-end px-2 pb-1">
-                        {new Date(message.createdAt).toLocaleTimeString([], {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-
-            {!isSending && !hasHistory && (
-              <div className="flex flex-wrap gap-2 pt-2">
-                {[
-                  "What is CREAiVE?",
-                  "How is AI Human used?",
-                  "Tell me about AI Microsite",
-                  "What can AI Lab do?",
-                  "Tell me about HOLOVUE",
-                  "Pricing & timelines?",
-                ].map((faq, i) => (
-                  <button
-                    key={i}
-                    type="button"
-                    onClick={() => handleFaqClick(faq)}
-                    className="rounded-full border border-indigo-200/80 bg-white/60 px-3 py-1.5 text-xs text-slate-600 shadow-sm transition-all hover:bg-indigo-50 hover:border-indigo-300 hover:text-indigo-700 hover:shadow-md"
-                  >
-                    {faq}
-                  </button>
-                ))}
-              </div>
-            )}
-            <div ref={messagesEndRef} />
+                x
+              </button>
+            </header>
           </div>
 
-          {/* Composer */}
-          <form
-            onSubmit={handleSubmit}
-            className="relative px-3 py-2.5 backdrop-blur-sm border-t border-white/20"
-            style={{ backgroundImage: PANEL_BACKDROP }}
-          >
-            <fieldset
-              className="flex gap-2 items-end"
-              disabled={composerDisabled}
+          <div className="relative flex h-[480px] flex-col">
+            <div className="absolute inset-0 bg-gradient-to-b from-white/60 via-white/10 to-white/20" />
+            <div className="relative flex-1 space-y-4 overflow-y-auto px-4 py-4">
+              {error && (
+                <div
+                  role="alert"
+                  className="rounded-xl border border-rose-200 bg-rose-50/80 px-3 py-2 text-xs text-rose-600 shadow-sm"
+                >
+                  {error}
+                </div>
+              )}
+              {!hasHistory && !isInitializing && !error && (
+                <div className="space-y-3">
+                  <p className="text-sm text-slate-500">
+                    สวัสดีค่ะ/ครับ 😊 วันนี้อยากให้ CODEE ช่วยอะไรดีเอ่ย?
+                  </p>
+                </div>
+              )}
+              {isInitializing && (
+                <div className="flex items-center gap-3 rounded-xl border border-indigo-200/60 bg-white/50 px-3 py-2 text-sm text-slate-600">
+                  <span className="inline-flex h-2.5 w-2.5 animate-pulse rounded-full bg-indigo-500" />
+                  Connecting to CODEE...
+                </div>
+              )}
+              {messages.map((message, index) => {
+                const isAssistant = message.role === "assistant";
+                const alignment = isAssistant
+                  ? "justify-start gap-2"
+                  : "justify-end";
+                const bubbleTone = isAssistant
+                  ? "bg-gradient-to-br from-[#904BFA]/40 via-[#7A4FE2]/30 to-[#B97BFF]/30 text-white shadow-lg"
+                  : "bg-white/50 text-slate-900 border border-white/30 shadow-sm backdrop-blur";
+
+                return (
+                  <div
+                    key={`${message.id}-${index}`}
+                    className={`flex ${alignment}`}
+                  >
+                    <div
+                      className={`max-w-[82%] rounded-2xl px-0 py-0 transition ${bubbleTone}`}
+                    >
+                      <div className="flex p-2 items-center">
+                        {isAssistant && (
+                          <div className="w-6 h-6 bg-red-50 rounded-full flex items-center justify-center overflow-hidden">
+                            {/* <img src="/creaive/codee.png" /> */}
+                            <video
+                              src="/creaive/codee.webm"
+                              autoPlay
+                              muted
+                              loop
+                              className="w-full object-cover"
+                            />
+                          </div>
+                        )}
+                        <span className="text-[11px] font-semibold uppercase tracking-wide opacity-80 text-gray-900 px-2">
+                          {isAssistant
+                            ? ASSISTANT_NAME
+                            : message.author || "You"}
+                        </span>
+                      </div>
+
+                      <p
+                        className={`mt-1 whitespace-pre-line text-sm leading-relaxed text-[#0e113f] px-2 ${isAssistant ? "text-start" : "text-end"
+                          }`}
+                      >
+                        {message.content}
+                      </p>
+
+                      {message.createdAt && (
+                        <span className="my-1 block text-[10px] uppercase tracking-wider text-[#0e113f] text-end px-2">
+                          {new Date(message.createdAt).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+
+              {!isSending && (
+                <div className="absolute bottom-30 left-0 right-0 flex flex-nowrap gap-2 pb-2 px-4 overflow-x-auto hide-scrollbar">
+                  {[
+                    "What is CREAiVE?",
+                    "What does CREAiVE do, and how is it different from typical agencies or production houses?",
+                    "Which types of campaigns is AI Human suitable for, and how can we customize the persona to fit the brand?",
+                    "How does the AI Microsite (AI Platform) drive engagement and collect consent/first-party data, and how can it integrate with advertising?",
+                    "How much time and budget can AI Lab save, and what are the end-to-end workflow steps from brief to delivery?",
+                    "What space and equipment does HOLOVUE require, and how do we connect it with AI Human/AI Lab/AI Platform on-site to create a wow effect?",
+                    "Do you offer standard pricing packages and timelines, and what PDPA/data security measures are in place?"
+                  ].map((faq, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      onClick={() => handleFaqClick(faq)}
+                      className="shrink-0 rounded-xl border border-indigo-200 bg-white/70 px-3 py-1.5 text-xs text-slate-700 shadow-sm hover:bg-indigo-50"
+                    >
+                      {faq}
+                    </button>
+                  ))}
+                </div>
+              )}
+              <div ref={messagesEndRef} />
+            </div>
+
+            <form
+              onSubmit={handleSubmit}
+              className="relative px-2 py-2 backdrop-blur"
+              style={{ backgroundImage: PANEL_BACKDROP }}
             >
-              <textarea
-                className="h-10 w-full resize-none rounded-2xl border border-white/60 bg-white/50 px-3 py-2 text-sm text-[#0e113f] placeholder:text-slate-400 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-200/50 transition-all"
-                placeholder="Ask CODEE anything..."
-                value={inputValue}
-                onChange={(event) => setInputValue(event.target.value)}
-                aria-label="Message input"
-                onKeyDown={(event) => {
-                  if (event.key === "Enter" && !event.shiftKey) {
-                    event.preventDefault();
-                    if (!composerDisabled && inputValue.trim()) {
-                      const form = event.currentTarget.form;
-                      if (form) {
-                        form.requestSubmit();
+              <fieldset className="flex gap-3" disabled={composerDisabled}>
+                <textarea
+                  className="h-10 w-full resize-none rounded-2xl border border-white/60 bg-white/50 px-3 py-2 text-sm text-[#0e113f] placeholder:text-slate-400 focus:border-indigo-400 focus:outline-none focus:ring focus:ring-indigo-200"
+                  placeholder="Ask CODEE anything..."
+                  value={inputValue}
+                  onChange={(event) => setInputValue(event.target.value)}
+                  aria-label="Message input"
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" && !event.shiftKey) {
+                      event.preventDefault();
+                      if (!composerDisabled && inputValue.trim()) {
+                        const form = event.currentTarget.form;
+                        if (form) {
+                          form.requestSubmit();
+                        }
                       }
                     }
-                  }
-                }}
-              />
-              <button
-                type="submit"
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-r from-primary-600 via-primary-400 to-complementary-500 text-white shadow-lg transition-all hover:shadow-xl hover:scale-105 focus:outline-none focus:ring-2 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
-                disabled={composerDisabled || !inputValue.trim()}
-              >
-                <FaLocationArrow
-                  size={16}
-                  className={isSending ? "opacity-50 animate-pulse" : ""}
+                  }}
                 />
-              </button>
-            </fieldset>
-          </form>
+                <button
+                  type="submit"
+                  className="flex h-10 min-w-[40px] items-center justify-center rounded-2xl bg-gradient-to-r from-primary-600 via-primary-400 to-complementary-500 px-4 text-sm font-medium text-white shadow-lg transition hover:brightness-105 focus:outline-none focus:ring-2 disabled:cursor-not-allowed"
+                  disabled={composerDisabled || !inputValue.trim()}
+                >
+                  {isSending ? (
+                    <div className="opacity-50">
+                      <FaLocationArrow size={20} />
+                    </div>
+                  ) : (
+                    <div>
+                      <FaLocationArrow size={20} />
+                    </div>
+                  )}
+                </button>
+              </fieldset>
+            </form>
+          </div>
         </div>
-        </div>
-      ) : null}
-
-      {/* ── Floating Toggle Button ── */}
-      {!isOpen && (
-        <div className="pointer-events-auto flex flex-col items-end gap-2">
-          {/* Avatar bubble */}
-          <button
-            type="button"
-            onClick={openChat}
-            className="group relative w-16 h-16 rounded-full overflow-hidden shadow-[0_8px_32px_rgba(120,42,144,0.4)] transition-all duration-300 hover:scale-110 hover:shadow-[0_12px_40px_rgba(120,42,144,0.5)] focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-2"
-            aria-label={toggleLabel}
-          >
-            {/* Gradient ring */}
-            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-primary-600 via-primary-400 to-complementary-500 p-[2.5px]">
-              <div className="flex h-full w-full items-center justify-center rounded-full bg-[#0a0f1b] text-base font-bold text-white">
-                C
-              </div>
-            </div>
-            {/* Pulse ring animation */}
-            <span
-              className="absolute inset-0 rounded-full animate-ping bg-primary-500/20"
-              style={{ animationDuration: "2s" }}
+      ) : (
+        <div
+          className="bg-gradient-to-r from-primary-600 via-primary-400 to-complementary-500 
+             p-1 overflow-hidden rounded-full w-[160px] h-[160px] flex 
+             cursor-pointer pointer-events-auto"
+          onClick={() => setIsOpen(true)}
+        >
+          <div className="w-[150px] h-[150px] flex m-auto overflow-hidden rounded-full">
+            <video
+              src="/creaive/codee.webm"
+              autoPlay
+              muted
+              loop
+              className="w-full object-cover"
             />
-
-            {/* Unread badge */}
-            {unreadCount > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 z-10 flex h-5 w-5 items-center justify-center rounded-full bg-rose-500 text-[10px] font-bold text-white shadow-lg ring-2 ring-white">
-                {unreadCount > 9 ? "9+" : unreadCount}
-              </span>
-            )}
-          </button>
-
-          {/* Label pill */}
-          <button
-            type="button"
-            onClick={openChat}
-            className="rounded-full bg-gradient-to-r from-primary-600 via-primary-400 to-complementary-500 px-4 py-1.5 text-xs font-semibold text-white shadow-lg transition-all hover:brightness-110 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-indigo-300"
-            aria-expanded={isOpen}
-            aria-label={toggleLabel}
-          >
-            💬 Chat with CODEE
-          </button>
+          </div>
         </div>
       )}
+
+      <button
+        type="button"
+        onClick={() => {
+          setIsOpen((prev) => !prev);
+          setUnreadCount(0);
+        }}
+        // bg-gradient-to-r from-[#6C43DB] via-[#AA5AFF] to-[#F5B8FF]
+        className="pointer-events-auto flex items-center gap-2 rounded-full 
+        bg-gradient-to-r from-primary-600 via-primary-400 to-complementary-500
+        px-4 py-2 text-sm font-semibold text-white shadow-lg transition hover:brightness-105 focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:ring-offset-1 focus:ring-offset-white"
+        aria-expanded={isOpen}
+        aria-label={toggleLabel}
+      >
+        <span className="inline-flex h-2.5 w-2.5 items-center justify-center">
+          <span className="block h-full w-full rounded-full bg-white/70" />
+        </span>
+        {toggleLabel}
+        {/* {unreadCount > 0 && !isOpen && (
+          <span className="ml-2 inline-flex min-w-[1.75rem] items-center justify-center rounded-full bg-black/20 px-2 py-0.5 text-xs font-semibold">
+            {unreadCount}
+          </span>
+        )} */}
+      </button>
     </div>
   );
 }

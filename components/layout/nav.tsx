@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback, useEffect, useRef } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import { RxHamburgerMenu } from "react-icons/rx";
@@ -57,9 +57,9 @@ function NavGradientButton({
     .join(" ");
 
   const inner = (
-    <div className="w-full h-full rounded-lg bg-gradient-to-r from-primary-500 via-primary-400 to-complementary-500 p-[1.5px]">
-      <div className="h-full w-full bg-[#0a0e18] rounded-[6.5px] flex items-center justify-center hover:bg-[#0f1420] transition-colors">
-        <span className="text-[12px] font-unitea text-white/90 uppercase tracking-wider">
+    <div className="w-full h-full rounded-[6px] bg-gradient-to-r from-primary-600 via-primary-400 to-complementary-500 p-[2px]">
+      <div className="h-full w-full bg-[#121212] rounded-[6px] flex items-center justify-center">
+        <span className="text-[14px] font-unitea text-white uppercase tracking-wide">
           {label}
         </span>
       </div>
@@ -68,7 +68,7 @@ function NavGradientButton({
 
   if (href) {
     const handleLinkClick = async (
-      event: React.MouseEvent<HTMLAnchorElement>,
+      event: React.MouseEvent<HTMLAnchorElement>
     ) => {
       if (disabled) {
         event.preventDefault();
@@ -85,6 +85,8 @@ function NavGradientButton({
         onClick={handleLinkClick}
         aria-disabled={disabled}
         className={classes}
+        target="_blank"
+        rel="noopener noreferrer"
       >
         {inner}
       </Link>
@@ -92,7 +94,7 @@ function NavGradientButton({
   }
 
   const handleButtonClick = async (
-    event: React.MouseEvent<HTMLButtonElement>,
+    event: React.MouseEvent<HTMLButtonElement>
   ) => {
     if (disabled) {
       event.preventDefault();
@@ -138,8 +140,8 @@ function DesktopNav({
   }, [close]);
 
   return (
-    <div className="hidden lg:flex items-center gap-1 text-white">
-      <nav className="uppercase font-proDisplayRegular text-[11px] xl:text-[13px] flex items-center gap-0.5 tracking-wider">
+    <div className="hidden lg:flex items-center gap-6 text-white">
+      <nav className="uppercase font-proDisplayRegular text-[12px] xl:text-[14px] flex items-center gap-4">
         {LINKS.map((link) => (
           <div key={link.id}>
             {link.title === "PRODUCTS" ? (
@@ -152,39 +154,47 @@ function DesktopNav({
               >
                 <Link
                   href="/products"
-                  className="block px-3 py-2 rounded-lg text-white/70 hover:text-white hover:bg-white/[0.06] transition-all duration-200"
-                  aria-haspopup="menu"
-                  aria-expanded={open}
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
-                  Products
+                  <div
+                    className="hover:scale-105 transition uppercase"
+                    aria-haspopup="menu"
+                    aria-expanded={open}
+                  >
+                    Products
+                  </div>
                 </Link>
                 <div
                   className={[
-                    "absolute left-0 pt-1 w-52 transition-all duration-200",
+                    "absolute right-0 mt-0 py-2 w-56 rounded-lg shadow-lg transition",
                     open
-                      ? "opacity-100 pointer-events-auto translate-y-0"
-                      : "opacity-0 pointer-events-none -translate-y-1",
+                      ? "opacity-100 pointer-events-auto"
+                      : "opacity-0 pointer-events-none",
+                    "bg-black text-white",
                   ].join(" ")}
                   role="menu"
                 >
-                  <div className="rounded-xl border border-white/[0.08] bg-[#0a0e18]/95 backdrop-blur-xl text-white py-1.5 shadow-2xl">
-                    {PRODUCTS.map((p) => (
-                      <Link
-                        key={p.id}
-                        href={p.path}
-                        className="block px-4 py-2.5 text-[12px] text-white/70 hover:text-white hover:bg-white/[0.06] transition-colors first:rounded-t-lg last:rounded-b-lg"
-                      >
-                        {p.title}
-                      </Link>
-                    ))}
-                  </div>
+                  {PRODUCTS.map((p) => (
+                    <Link
+                      key={p.id}
+                      href={p.path}
+                      className="block px-4 py-2 hover:bg-white/10"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {p.title}
+                    </Link>
+                  ))}
                 </div>
               </div>
             ) : (
               <Link
                 key={link.id}
                 href={link.path}
-                className="px-3 py-2 rounded-lg text-white/70 hover:text-white hover:bg-white/[0.06] transition-all duration-200"
+                className="hover:scale-105 transition"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 {link.title}
               </Link>
@@ -196,29 +206,29 @@ function DesktopNav({
           <Link
             key={link.id}
             href={link.path}
-            className="px-3 py-2 rounded-lg text-white/70 hover:text-white hover:bg-white/[0.06] transition-all duration-200"
+            className="px-2 py-1 hover:scale-105 transition"
+            target="_blank"
+            rel="noopener noreferrer"
           >
             {link.title}
           </Link>
         ))}
       </nav>
 
-      <div className="ml-2">
-        {authLoading ? (
-          <NavGradientButton label="Loading" disabled />
-        ) : isAuthed ? (
-          <div className="flex items-center gap-2">
-            <NavGradientButton label="Dashboard" href="/dashboard" />
-            <NavGradientButton
-              label={signingOut ? "Signing..." : "Sign Out"}
-              onClick={onSignOut}
-              disabled={signingOut}
-            />
-          </div>
-        ) : (
-          <NavGradientButton label="Sign In" href="/sign-in" />
-        )}
-      </div>
+      {authLoading ? (
+        <NavGradientButton label="Loading" disabled />
+      ) : isAuthed ? (
+        <div className="flex items-center gap-2">
+          <NavGradientButton label="Dashboard" href="/dashboard" />
+          <NavGradientButton
+            label={signingOut ? "Signing..." : "Sign Out"}
+            onClick={onSignOut}
+            disabled={signingOut}
+          />
+        </div>
+      ) : (
+        <NavGradientButton label="Sign In" href="/sign-in" />
+      )}
     </div>
   );
 }
@@ -228,53 +238,42 @@ export default function Navbar() {
   const { status, loading } = useSelector(selectAuth);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
-  const lastAuthRefreshAt = useRef(0);
 
   const isAuthed = status === "authenticated";
   const authLoading = status === "unknown" || loading;
 
-  const refreshAuth = useCallback(
-    (minGapMs = 0) => {
-      const now = Date.now();
-      if (now - lastAuthRefreshAt.current < minGapMs) return;
-      lastAuthRefreshAt.current = now;
-      dispatch(fetchMe());
-    },
-    [dispatch],
-  );
-
   useEffect(() => {
     if (status === "unknown" && !loading) {
-      refreshAuth();
+      dispatch(fetchMe());
     }
-  }, [status, loading, refreshAuth]);
+  }, [dispatch, status, loading]);
 
   // Sync auth state across tabs
   useEffect(() => {
     const handleStorageChange = (e: StorageEvent) => {
       // Detect sign-out from another tab
       if (e.key === "auth_signout" && e.newValue) {
-        refreshAuth();
+        dispatch(fetchMe());
       }
       // Detect sign-in from another tab
       if (e.key === "auth_signin" && e.newValue) {
-        refreshAuth();
+        dispatch(fetchMe());
       }
     };
 
     const handleVisibilityChange = () => {
       if (document.visibilityState === "visible") {
-        // Avoid duplicate refreshes when users switch tabs quickly.
-        refreshAuth(60_000);
+        // Tab became visible, refresh auth state
+        dispatch(fetchMe());
       }
     };
 
-    // Poll auth state every 5 minutes to reduce background API load.
+    // Poll auth state every 30 seconds to detect session expiry
     const intervalId = setInterval(() => {
       if (isAuthed) {
-        refreshAuth(60_000);
+        dispatch(fetchMe());
       }
-    }, 300000);
+    }, 30000);
 
     window.addEventListener("storage", handleStorageChange);
     document.addEventListener("visibilitychange", handleVisibilityChange);
@@ -284,7 +283,7 @@ export default function Navbar() {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       clearInterval(intervalId);
     };
-  }, [isAuthed, refreshAuth]);
+  }, [dispatch, isAuthed]);
 
   const toggleMobile = useCallback(() => setMobileOpen((v) => !v), []);
   const closeMobile = useCallback(() => setMobileOpen(false), []);
@@ -313,41 +312,40 @@ export default function Navbar() {
   }, [closeMobile]);
 
   return (
-    <div className="fixed top-0 left-0 z-20 w-full">
-      {/* Glass bar */}
-      <div className="border-b border-white/[0.06] bg-[#050810]/60 backdrop-blur-xl backdrop-saturate-150 supports-[backdrop-filter]:bg-[#050810]/40">
-        <div className="w-full max-w-[1280px] 2xl:max-w-[1536px] mx-auto flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
-          {/* Logo */}
-          <Link
-            href="/"
-            className="shrink-0 transition-opacity hover:opacity-80"
-          >
-            <img
-              src="/creaive/Creaive Logo Final 06.png"
-              alt="CREAiVE"
-              className="w-[100px] xl:w-[110px]"
-            />
-          </Link>
-
-          {/* Desktop */}
-          <DesktopNav
-            isAuthed={isAuthed}
-            authLoading={authLoading}
-            signingOut={signingOut}
-            onSignOut={handleSignOut}
+    <div className="fixed top-0 left-0 z-20 w-full bg-[#121212]/20 supports-[backdrop-filter]:bg-[#121212]/30">
+      <div className="w-full max-w-[1280px] 2xl:max-w-[1650px] mx-auto flex items-center justify-between h-16 px-3">
+        {/* Logo */}
+        <Link
+          href="/"
+          className="shrink-0"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img
+            src="/creaive/Creaive Logo Final 06.png"
+            alt="CREAiVE"
+            className="w-[100px] xl:w-[120px]"
           />
+        </Link>
 
-          {/* Mobile hamburger */}
-          <button
-            className="lg:hidden text-white/80 p-2 rounded-lg hover:bg-white/[0.06] transition-colors"
-            onClick={toggleMobile}
-            aria-expanded={mobileOpen}
-            aria-controls="mobile-menu"
-            aria-label="Toggle menu"
-          >
-            <RxHamburgerMenu size={24} />
-          </button>
-        </div>
+        {/* Desktop */}
+        <DesktopNav
+          isAuthed={isAuthed}
+          authLoading={authLoading}
+          signingOut={signingOut}
+          onSignOut={handleSignOut}
+        />
+
+        {/* Mobile hamburger */}
+        <button
+          className="lg:hidden text-white p-2 rounded-md hover:bg-white/10"
+          onClick={toggleMobile}
+          aria-expanded={mobileOpen}
+          aria-controls="mobile-menu"
+          aria-label="Toggle menu"
+        >
+          <RxHamburgerMenu size={26} />
+        </button>
       </div>
 
       {/* Mobile drawer */}
@@ -381,7 +379,12 @@ export default function Navbar() {
           aria-label="Mobile navigation"
         >
           <div className="flex z-50 items-center justify-between h-16 px-4 border-b w-full border-white/10">
-            <Link href="/" onClick={closeMobile}>
+            <Link
+              href="/"
+              onClick={closeMobile}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <img
                 src="/creaive/Creaive Logo Final 06.png"
                 alt="CREAiVE"
@@ -409,6 +412,8 @@ export default function Navbar() {
                   href={link.path}
                   onClick={closeMobile}
                   className="flex items-center gap-2 px-4 py-3 rounded-lg bg-white/5 hover:bg-white/10 active:bg-white/15"
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
                   <IoIosArrowForward
                     size={18}
@@ -430,6 +435,8 @@ export default function Navbar() {
                   href={link.path}
                   onClick={closeMobile}
                   className="px-4 py-3 rounded-lg bg-white/5 hover:bg-white/10 active:bg-white/15"
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
                   <span className="text-sm">{link.title}</span>
                 </Link>
@@ -447,6 +454,8 @@ export default function Navbar() {
                   href={link.path}
                   onClick={closeMobile}
                   className="px-4 py-3 rounded-lg bg-white/5 hover:bg-white/10 active:bg-white/15"
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
                   <span className="text-sm">{link.title}</span>
                 </Link>

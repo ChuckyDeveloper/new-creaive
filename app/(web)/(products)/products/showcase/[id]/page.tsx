@@ -1,5 +1,5 @@
 // app/products/showcase/[id]/page.tsx
-export const revalidate = 120; // cache page for 2 minutes
+export const revalidate = 0; // always fresh (หรือเอาออกถ้าจะให้ cache ได้)
 
 import { notFound } from "next/navigation";
 import Image from "next/image";

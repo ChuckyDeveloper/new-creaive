@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { connectDB, hasMongoUri } from "../../../lib/db";
+import { connectDB } from "../../../lib/db";
 import { saveBufferAsPublicFile, webFileToBuffer, DEFAULT_ALLOWED } from "../../../lib/saveUpload";
 import Banner from "../../../models/Banner";
 import { requireRole } from "../../../lib/auth";
@@ -11,12 +11,6 @@ export const dynamic = "force-dynamic";
 export async function POST(req: NextRequest) {
     const gate = requireRole(req, ["admin", "manager", "master"]);
     if (!gate.ok) return withCORS(NextResponse.json({ error: gate.error }, { status: gate.status }));
-
-    if (!hasMongoUri()) {
-        return withCORS(
-            NextResponse.json({ message: "Database is not configured" }, { status: 503 })
-        );
-    }
 
     const uploadedBy = gate.claims?.sub;
     const uploadedRole = gate.claims?.role;
@@ -57,12 +51,6 @@ export async function POST(req: NextRequest) {
 
 
 export async function GET(req: NextRequest) {
-    if (!hasMongoUri()) {
-        const res = NextResponse.json([], { status: 200 });
-        res.headers.set("Cache-Control", "no-store");
-        return withCORS(res);
-    }
-
     await connectDB();
     const { searchParams } = new URL(req.url);
     const active = searchParams.get("active");

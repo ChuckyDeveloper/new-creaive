@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { fetchProducts } from "../utils";
 import { Suspense } from "react";
-export const revalidate = 120;
+export const revalidate = 0;
 
 async function ProductsGrid() {
   const data = await fetchProducts("tags=holovue");

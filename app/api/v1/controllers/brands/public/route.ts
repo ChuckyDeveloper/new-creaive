@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { FilterQuery, Types } from "mongoose";
-import { connectDB, hasMongoUri } from "../../../lib/db";
+import { connectDB } from "../../../lib/db";
 import CustomerBrand, { ICustomerBrand } from "../../../models/CustomerBrand";
 import { num, truthy } from "../../../lib/helper";
 
@@ -77,17 +77,6 @@ function buildPublicFilter(url: URL): FilterQuery<ICustomerBrand> {
 }
 
 export async function GET(req: NextRequest) {
-    if (!hasMongoUri()) {
-        return NextResponse.json({
-            page: 1,
-            limit: 0,
-            total: 0,
-            pages: 1,
-            mode: "paged",
-            items: [],
-        });
-    }
-
     try {
         await connectDB();
         const url = new URL(req.url);
