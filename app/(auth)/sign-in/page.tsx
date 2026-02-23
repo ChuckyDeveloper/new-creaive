@@ -27,7 +27,7 @@ function SignInClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect") || "/dashboard";
-  const API_BASE = "process.env.NEXT_PUBLIC_API_BASE" || "";
+  const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "";
 
   const dispatch = useDispatch<AppDispatch>();
   const { loading, error } = useSelector(selectAuth);
