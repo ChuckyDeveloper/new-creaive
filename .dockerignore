@@ -1,0 +1,10 @@
+node_modules
+.next
+.git
+.gitignore
+*.md
+docker-compose*.yml
+Dockerfile
+.dockerignore
+.env*.local
+mongodb-2025-09-09
