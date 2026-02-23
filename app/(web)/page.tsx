@@ -137,23 +137,19 @@ export default function Home() {
           <section className="reveal-section group relative overflow-hidden rounded-3xl border border-white/[0.06] bg-white/[0.02] shadow-2xl backdrop-blur-[2px] transition-all duration-700 hover:border-white/[0.1] hover:shadow-primary-500/[0.05]">
             <div className="pointer-events-none absolute left-0 top-0 h-32 w-32 bg-gradient-to-br from-primary-500/10 to-transparent opacity-0 transition-opacity duration-700 group-hover:opacity-100" />
             <div className="pointer-events-none absolute bottom-0 right-0 h-32 w-32 bg-gradient-to-tl from-complementary-500/10 to-transparent opacity-0 transition-opacity duration-700 group-hover:opacity-100" />
-            <FecilitateComponent />
+            {/* <FecilitateComponent /> */}
             <AnimatedBackground />
           </section>
         </ContainerPage>
-
         <SectionDivider variant="glow" />
-
-        {/* ══════════  SHOWCASE  ══════════ */}
+        ══════════ SHOWCASE ══════════
         <ContainerPage className="w-full h-auto relative max-w-[1280px] 2xl:max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8">
           <section className="reveal-section space-y-16 md:space-y-20">
             <SectionLabel>Showcase</SectionLabel>
             <RealWorldCase />
           </section>
         </ContainerPage>
-
         <SectionDivider variant="dots" />
-
         {/* ══════════  PRODUCTS  ══════════ */}
         <ContainerPage className="w-full h-auto relative max-w-[1280px] 2xl:max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8">
           <section className="reveal-section">
@@ -161,9 +157,7 @@ export default function Home() {
             <OurProducts />
           </section>
         </ContainerPage>
-
         <SectionDivider />
-
         {/* ══════════  TRUSTED BY  ══════════ */}
         <ContainerPage className="w-full h-auto relative max-w-[1280px] 2xl:max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8">
           <section className="reveal-section group relative overflow-hidden rounded-3xl border border-white/[0.04] bg-gradient-to-b from-white/[0.025] to-white/[0.01] p-6 md:p-10 backdrop-blur-[2px] transition-all duration-500 hover:border-white/[0.08]">
@@ -171,9 +165,7 @@ export default function Home() {
             <TrustedBy />
           </section>
         </ContainerPage>
-
         <SectionDivider variant="glow" />
-
         {/* ══════════  USE CASES  ══════════ */}
         <section className="reveal-section relative">
           <div className="pointer-events-none absolute inset-0 -z-10">
@@ -182,9 +174,7 @@ export default function Home() {
           <SectionLabel>Use Cases</SectionLabel>
           <OurUseCases />
         </section>
-
         <SectionDivider variant="dots" />
-
         {/* ══════════  TECH PARTNERS  ══════════ */}
         <ContainerPage className="w-full h-auto relative max-w-[1280px] 2xl:max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8">
           <section className="reveal-section group relative overflow-hidden rounded-3xl border border-white/[0.04] bg-gradient-to-b from-white/[0.025] to-transparent p-6 md:p-10 backdrop-blur-[2px] transition-all duration-500 hover:border-white/[0.08]">
@@ -192,9 +182,7 @@ export default function Home() {
             <OurTechPartners />
           </section>
         </ContainerPage>
-
         <SectionDivider variant="glow" />
-
         {/* ══════════  CONTACT  ══════════ */}
         <ContainerPage className="w-full h-auto relative max-w-[1280px] 2xl:max-w-[1536px] mx-auto px-0 sm:px-6 lg:px-8 pb-20 md:pb-28">
           <section className="reveal-section group relative overflow-hidden rounded-3xl border border-white/[0.06] bg-gradient-to-b from-primary-600/[0.06] via-primary-500/[0.02] to-transparent p-6 md:p-10 backdrop-blur-[2px] transition-all duration-500 hover:border-primary-500/[0.12]">

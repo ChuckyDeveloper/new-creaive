@@ -21,8 +21,7 @@ const Card = ({ image }: Props) => {
   );
 };
 
-
-const CarouselsPreviewRola: React.FC = ({ }) => {
+const CarouselsPreviewRola: React.FC = ({}) => {
   const aimodels = [
     "ai-models/Aden 01.jpg",
     "ai-models/Aden 02.jpg",
@@ -72,7 +71,7 @@ const CarouselsPreviewRola: React.FC = ({ }) => {
     "ai-models/NISA 04.jpg",
     "ai-models/NISA 05.jpg",
     "ai-models/NISA 06.jpg",
-  ]
+  ];
 
   return (
     // children, prevArrow, nextArrow, navigation, autoplay, autoplayDelay, transition, loop, className, slideRef
@@ -86,7 +85,9 @@ const CarouselsPreviewRola: React.FC = ({ }) => {
       transition={{ duration: 15 }}
       className="max-h-[800px] xl:max-h-[600px] no-scrollbar gradienL2R py-8"
       placeholder={undefined}
-      onPointerEnterCapture={() => undefined}
+      onResize={undefined}
+      onResizeCapture={undefined}
+      onPointerEnterCapture={undefined}
       onPointerLeaveCapture={undefined}
     >
       <div className="flex w-auto">

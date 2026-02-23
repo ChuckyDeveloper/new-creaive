@@ -6,7 +6,6 @@ type Props = {
   img: string;
 };
 
-
 const Card = ({ img }: Props) => {
   return (
     <div className="flex gap-4 mr-4">
@@ -36,7 +35,9 @@ const CarouselsTechnicalPartners: React.FC = ({}) => {
       transition={{ duration: 5 }}
       className="xl:w-[500px] no-scrollbar gradienL2R m-auto"
       placeholder={undefined}
-      onPointerEnterCapture={() => undefined}
+      onResize={undefined}
+      onResizeCapture={undefined}
+      onPointerEnterCapture={undefined}
       onPointerLeaveCapture={undefined}
     >
       <Card img="/partners/Partners Logo 01.png" />

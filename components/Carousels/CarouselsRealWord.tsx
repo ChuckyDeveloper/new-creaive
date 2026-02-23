@@ -31,7 +31,9 @@ const CarouselsRealWord: React.FC<CarouselProps> = ({ children }) => {
         </div>
       )}
       placeholder={undefined}
-      onPointerEnterCapture={() => undefined}
+      onResize={undefined}
+      onResizeCapture={undefined}
+      onPointerEnterCapture={undefined}
       onPointerLeaveCapture={undefined}
     >
       {children}
