@@ -8,10 +8,10 @@ import { IoClose } from "react-icons/io5";
 
 const LINKS = [
   { id: 0, title: "ABOUT US", path: "/about-us" },
-  { id: 1, title: "PRODUCTS", path: "/#" },
+  { id: 1, title: "PRODUCTS", path: "/" },
   { id: 20, title: "CMS", path: "/cms" },
   { id: 21, title: "HOLOVUE", path: "/holovue" },
-  { id: 2, title: "BLOG", path: "/blog" },
+  // { id: 2, title: "BLOG", path: "/blog" },
   { id: 3, title: "CONTACT", path: "/contact-us" },
 ];
 
@@ -112,10 +112,6 @@ function DesktopNav() {
           </div>
         ))}
       </nav>
-
-      <div className="ml-2">
-        <NavGradientButton label="Request Demo" href="/request-demo" />
-      </div>
     </div>
   );
 }
@@ -259,13 +255,13 @@ export default function Navbar() {
           </div>
         </nav>
 
-        <div className="relative z-10 shrink-0 border-t border-white/[0.06] bg-[#050810]/80 backdrop-blur-lg px-5 py-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
+        {/* <div className="relative z-10 shrink-0 border-t border-white/[0.06] bg-[#050810]/80 backdrop-blur-lg px-5 py-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
           <NavGradientButton
             label="Request Demo"
-            href="/request-demo"
+            href="/contact-us"
             className="w-full"
           />
-        </div>
+        </div> */}
       </aside>
     </div>
   );

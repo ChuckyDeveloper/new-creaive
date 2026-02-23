@@ -1,107 +1,253 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import Container from '../../../../components/layout/containerPage'
-import ContactComponant from "../../../../components/Contact/";
-import { CardVideo } from "../../../../components/Cards";
+
+import React from "react";
 import Link from "next/link";
+import ContactComponant from "../../../../components/Contact/";
+import Container from "../../../../components/layout/containerPage";
 
+/* ─── data ──────────────────────────────────────────────────────────── */
+const SHOWCASES = [
+  {
+    title: "AI Influencer & Ambassadors",
+    description:
+      "Deploy AI-powered brand ambassadors that engage audiences 24/7 with consistent, on-brand messaging.",
+    video: "/videos/influ.mp4",
+  },
+  {
+    title: "AI Clone",
+    description:
+      "Create digital replicas of real people — preserving voice, mannerisms, and personality for scalable interactions.",
+    video: "/videos/K_Prapan.mp4",
+  },
+  {
+    title: "MC Avatar",
+    description:
+      "AI-driven virtual hosts that can present, narrate, and interact with audiences in real time.",
+    video: "/videos/AIinfluencerAmbrassador.mp4",
+  },
+  {
+    title: "MC Chat",
+    description:
+      "Conversational AI characters that deliver natural, human-like dialogue experiences across platforms.",
+    video: "/videos/Nis_04.mp4",
+  },
+];
 
-const ShowCases = () => {
-    return (
-        <div className="p-4">
-            <div className='pt-[10vh] lg:pt-[6vh] h-auto lg:h-[800px] overflow-hidden rounded-[10px]'>
-                <img
-                    src="/AI Chatbot Banner 1.png"
-                    className='w-full object-center object-cover rounded-[10px] '
-                />
-            </div>
+/* ─── Section badge ─────────────────────────────────────────────────── */
+function SectionBadge({
+  label,
+  color = "primary",
+}: {
+  label: string;
+  color?: "primary" | "complementary";
+}) {
+  const dot = color === "primary" ? "bg-primary-400" : "bg-complementary-400";
+  const text =
+    color === "primary" ? "text-primary-300" : "text-complementary-300";
+  const border =
+    color === "primary"
+      ? "border-primary-500/20 bg-primary-500/[0.06]"
+      : "border-complementary-500/20 bg-complementary-500/[0.06]";
 
-            <div className="col-span-1 lg:col-start-1 text-[8vw] lg:text-[3vw] xl:text-[2.5vw] font-bold leading-[1.8rem] lg:text-center uppercase py-8 font-unitea bg-gradient-to-r from-primary-600 via-primary-600 to-complementary-600 inline-block text-transparent bg-clip-text w-auto">
-                AI Chatbot Showcase
-            </div>
+  return (
+    <div
+      className={`mb-5 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 ${border}`}
+    >
+      <span className={`h-1.5 w-1.5 animate-pulse rounded-full ${dot}`} />
+      <span
+        className={`text-[11px] font-semibold uppercase tracking-[0.25em] ${text}`}
+      >
+        {label}
+      </span>
+    </div>
+  );
+}
 
-            <h3 className='w-full pb-[2vh] text-[3vw] lg:text-[1vw] xl:text-[0.8vw] text-center uppercase px-2'>
-                See how we have helped our customers and partners bring AI to life!
-            </h3>
+/* ─── Video showcase card ───────────────────────────────────────────── */
+function ShowcaseCard({
+  item,
+  index,
+}: {
+  item: (typeof SHOWCASES)[number];
+  index: number;
+}) {
+  return (
+    <article className="group relative overflow-hidden rounded-[24px] border border-white/[0.06] bg-[#0a0f1a]/80 transition-all duration-500 hover:-translate-y-2 hover:border-white/[0.12] hover:shadow-[0_20px_60px_-12px_rgba(120,42,144,0.15)]">
+      {/* Hover glow */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary-500/10 to-complementary-500/10 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
 
-            <div className=" ">
-                <div className="grid grid-cols-2 gap-2 ">
-                    <CardVideo
-                        text="AI Influencer & Ambrassadors"
-                        thums="/BlackWindow.png"
-                        video="/videos/influ.mp4"
-                    />
-                    <CardVideo
-                        text="AI Clone"
-                        thums="/BlackWindow.png"
-                        video="/videos/K_Prapan.mp4"
-                    />
-                    <CardVideo
-                        text="MC AVATAR"
-                        thums="/BlackWindow.png"
-                        video="/videos/AIinfluencerAmbrassador.mp4"
-                    />
-                    <CardVideo
-                        text="MC CHAT"
-                        thums="/BlackWindow.png"
-                        video="/videos/Nis_04.mp4"
-                    />
-                    {/* <CardVideo
-            text="Platform"
-            thums="/BlackWindow.png"
-            video="/videos/AIinfluencerAmbrassador.mp4"
-          /> */}
-                </div>
-            </div>
-            <div className="w-full py-20">
-                {/* <Buttons
-                    href_="https://ide.creaive.ai/"
-                    text="LET's TALK with our AI Humans"
-                    width="w-full"
-                    height="h-[50px]"
-                    padding=" "
-                    margin="m-auto "
-                    bgColor="bg-primary-700 hover:bg-primary-500"
-                    fontColor="text-white hover:text-[18px] duration-200 text-[14px] xl:text-[14px]"
-                /> */}
+      {/* Number watermark */}
+      <span className="absolute right-4 top-3 text-[56px] font-black leading-none text-white/[0.03] transition-all duration-500 group-hover:text-white/[0.06]">
+        {String(index + 1).padStart(2, "0")}
+      </span>
 
-                <Link
-                    target="_blank"
-                    href="https://ide.creaive.ai/"
-                    className='w-full '
-                >
-                    <button
-                        // onClick={onClick}
-                        type="submit"
-                        className='w-full'
-                    >
+      {/* Video */}
+      <div className="relative overflow-hidden">
+        <video
+          loop
+          muted
+          autoPlay
+          playsInline
+          preload="none"
+          className="aspect-video w-full object-cover transition-transform duration-700 group-hover:scale-105"
+        >
+          <source src={item.video} type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0f1a] via-[#0a0f1a]/20 to-transparent" />
+      </div>
 
-                        <div className="mx-auto flex max-w-[180px] h-[50px] items-center justify-center" >
-                            <div className=" w-full h-full rounded-[6px] bg-gradient-to-r from-primary-600 via-primary-400 to-complementary-500 pl-[2px] pr-[1px] py-[1px]">
-                                <div className="h-full w-full items-center justify-center bg-[#121212] rounded-[6px] flex">
-                                    <div className={`uppercase transition-all duration-300 font-unitea text-white hover:text-[18px] text-[14px] xl:text-[14px]`}>
-                                        LET's TALK with our AI Humans
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+      {/* Content */}
+      <div className="relative p-5 pt-4">
+        <h3 className="text-lg font-bold text-white transition-colors duration-300 group-hover:text-primary-300">
+          {item.title}
+        </h3>
+        <div className="my-3 h-px w-10 bg-gradient-to-r from-primary-500/50 to-transparent transition-all duration-500 group-hover:w-16 group-hover:from-complementary-500/60" />
+        <p className="text-[13px] leading-7 text-slate-400 transition-colors duration-300 group-hover:text-slate-300">
+          {item.description}
+        </p>
+      </div>
+    </article>
+  );
+}
 
-                    </button>
-                </Link>
-            </div>
+/* ─── Page ──────────────────────────────────────────────────────────── */
+export default function AiChatbotPage() {
+  return (
+    <Container className="relative mx-auto w-full max-w-[1280px] px-4 pb-24 pt-28 text-white sm:px-6 lg:px-8 lg:pt-36">
+      {/* ── Ambient glows ── */}
+      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+        <div className="absolute -left-40 -top-20 h-[600px] w-[600px] rounded-full bg-primary-500/[0.08] blur-[160px]" />
+        <div className="absolute -right-32 top-[30%] h-[500px] w-[500px] rounded-full bg-complementary-500/[0.06] blur-[140px]" />
+        <div className="absolute bottom-[15%] left-[30%] h-[400px] w-[400px] rounded-full bg-primary-600/[0.05] blur-[120px]" />
+      </div>
+
+      {/* ═══════════════════════════════════════════════
+          HERO
+      ═══════════════════════════════════════════════ */}
+      <section className="relative overflow-hidden rounded-[32px] border border-white/[0.08] bg-gradient-to-br from-white/[0.06] via-white/[0.02] to-transparent shadow-2xl backdrop-blur-sm">
+        {/* Decorative rings */}
+        <div className="pointer-events-none absolute -right-24 -top-24 h-[320px] w-[320px] rounded-full border border-primary-500/10" />
+        <div className="pointer-events-none absolute -bottom-16 -left-16 h-[240px] w-[240px] rounded-full border border-complementary-500/10" />
+
+        {/* Text content */}
+        <div className="relative z-10 px-8 pt-10 text-center md:px-12 md:pt-14 lg:pt-16">
+          <SectionBadge label="Conversational AI" />
+
+          <h1 className="text-5xl font-black leading-[1.05] tracking-tight md:text-6xl xl:text-7xl">
+            <span className="bg-gradient-to-r from-white via-white/90 to-white/70 bg-clip-text text-transparent">
+              AI{" "}
+            </span>
+            <span className="bg-gradient-to-r from-primary-400 via-primary-500 to-complementary-500 bg-clip-text text-transparent">
+              Chatbot
+            </span>
+          </h1>
+
+          <p className="mx-auto mt-5 max-w-2xl text-base leading-8 text-slate-300/90 md:text-lg md:leading-9">
+            Intelligent conversational agents that bring AI to life — engage
+            customers, automate interactions, and deliver human-like experiences
+            across every channel.
+          </p>
         </div>
-    );
-};
 
-const index = () => {
-    return (
-        <Container>
+        {/* Hero banner image */}
+        <div className="relative z-10 mt-8 px-6 pb-8 md:px-10 md:pb-10">
+          <div className="overflow-hidden rounded-2xl border border-white/[0.08] shadow-[0_20px_80px_-12px_rgba(120,42,144,0.2)]">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/AI Chatbot Banner 1.png"
+              alt="AI Chatbot"
+              className="w-full object-cover"
+            />
+          </div>
+        </div>
+      </section>
 
-            <ShowCases />
-            <ContactComponant title="Contact for AI Humans" />
+      {/* ═══════════════════════════════════════════════
+          SHOWCASE GRID
+      ═══════════════════════════════════════════════ */}
+      <section className="mt-20">
+        <div className="mx-auto max-w-3xl text-center">
+          <SectionBadge label="Showcase" color="complementary" />
+          <h2 className="text-4xl font-black leading-tight tracking-tight md:text-5xl xl:text-6xl">
+            <span className="bg-gradient-to-r from-white via-white/90 to-white/70 bg-clip-text text-transparent">
+              See AI{" "}
+            </span>
+            <span className="bg-gradient-to-r from-primary-400 via-primary-500 to-complementary-500 bg-clip-text text-transparent">
+              In Action
+            </span>
+          </h2>
+          <p className="mx-auto mt-4 max-w-xl text-base text-slate-400 md:text-lg">
+            See how we have helped our customers and partners bring AI to life
+            across industries.
+          </p>
+        </div>
 
-        </Container>
-    );
-};
+        <div className="mt-12 grid gap-6 sm:grid-cols-2">
+          {SHOWCASES.map((item, i) => (
+            <ShowcaseCard key={item.title} item={item} index={i} />
+          ))}
+        </div>
+      </section>
 
-export default index;
+      {/* ═══════════════════════════════════════════════
+          CTA — Try it
+      ═══════════════════════════════════════════════ */}
+      <section className="mt-20">
+        <div className="relative overflow-hidden rounded-[32px] border border-white/[0.08] bg-gradient-to-r from-primary-500/[0.08] via-[#0f172b] to-complementary-500/[0.08] p-10 text-center md:p-16">
+          <div className="pointer-events-none absolute -left-20 top-1/2 h-[300px] w-[300px] -translate-y-1/2 rounded-full bg-primary-500/[0.08] blur-[100px]" />
+          <div className="pointer-events-none absolute -right-20 top-1/2 h-[300px] w-[300px] -translate-y-1/2 rounded-full bg-complementary-500/[0.08] blur-[100px]" />
+
+          <div className="relative">
+            <h3 className="text-3xl font-black text-white md:text-4xl">
+              Talk to Our{" "}
+              <span className="bg-gradient-to-r from-primary-400 to-complementary-500 bg-clip-text text-transparent">
+                AI Humans
+              </span>
+            </h3>
+            <p className="mx-auto mt-4 max-w-lg text-base text-slate-400 md:text-lg">
+              Experience the future of conversational AI — try a live demo and
+              see the difference for yourself.
+            </p>
+
+            <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+              <Link
+                href="https://ide.creaive.ai/"
+                target="_blank"
+                className="inline-flex h-12 items-center gap-2 rounded-xl bg-gradient-to-r from-primary-500 via-primary-400 to-complementary-500 px-8 text-sm font-semibold text-white shadow-lg shadow-primary-500/20 transition-all duration-300 hover:shadow-xl hover:shadow-primary-500/30 hover:brightness-110"
+              >
+                Try Live Demo
+                <svg
+                  className="h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2.5}
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
+                  />
+                </svg>
+              </Link>
+
+              <Link
+                href="/contact-us"
+                className="inline-flex h-12 items-center gap-2 rounded-xl border border-white/[0.1] bg-white/[0.04] px-8 text-sm font-semibold text-white/80 transition-all duration-300 hover:border-white/[0.2] hover:bg-white/[0.08] hover:text-white"
+              >
+                Request a Demo
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════
+          CONTACT
+      ═══════════════════════════════════════════════ */}
+      <section className="mt-20">
+        <ContactComponant title="Contact for AI Chatbot" />
+      </section>
+    </Container>
+  );
+}

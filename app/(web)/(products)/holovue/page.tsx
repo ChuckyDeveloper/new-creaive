@@ -94,7 +94,7 @@ function HeroSection() {
           </p>
           <div className="mt-7 w-full sm:w-[240px]">
             <Buttons
-              href_="/request-demo"
+              href_="/contact-us"
               text="Request Demo"
               width="w-full"
               height="h-[50px]"
@@ -240,7 +240,7 @@ function CTASection() {
       </p>
       <div className="mx-auto mt-7 w-full sm:w-[240px]">
         <Buttons
-          href_="/request-demo"
+          href_="/contact-us"
           text="Request A Demo"
           width="w-full"
           height="h-[50px]"

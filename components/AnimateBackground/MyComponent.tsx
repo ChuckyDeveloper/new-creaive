@@ -82,7 +82,7 @@ const MyComponent: React.FC = () => {
         </div>
 
         <div className="absolute top-[70%] md:top-[70%] lg:top-[80%] h-auto">
-          <Link href="/request-demo">
+          <Link href="/contact-us">
             <button type="submit" className="w-[200px] mx-auto">
               <div
                 className={`mx-auto flex h-[40px] xl:h-[45px] items-center justify-center`}
