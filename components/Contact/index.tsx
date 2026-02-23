@@ -32,6 +32,9 @@ const ContactComponant = ({ title }: { title?: string }) => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    setError("");
+    setSuccess("");
+
     if (
       !email.trim() ||
       !firstName.trim() ||
@@ -55,23 +58,28 @@ const ContactComponant = ({ title }: { title?: string }) => {
     setSubmitting(true);
 
     try {
-      const response = await fetch("/api/v1/controllers/mail", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          firstName: firstName.trim(),
-          lastName: lastName.trim(),
-          email: email.trim(),
-          country: country.trim(),
-          company: company.trim(),
-          phone: phone.trim(),
-          subject: subject.trim(),
-          detail: detail.trim(),
-        }),
-      });
+      const webhookResponse = await fetch(
+        "https://hook.us2.make.com/b3a8g7xh3xfh4yaav39hqw8b9wnw45ss",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            firstName: firstName.trim(),
+            lastName: lastName.trim(),
+            country: country.trim(),
+            phone: phone.trim(),
+            email: email.trim(),
+            company: company.trim(),
+            subject: subject.trim(),
+            message: detail.trim(),
+          }),
+        },
+      );
 
-      if (response.ok) {
-        console.log("Mailbox has send.");
+      if (!webhookResponse.ok) {
+        throw new Error("Failed to send webhook.");
       }
 
       setSuccess("Message sent successfully! We'll get back to you soon.");
@@ -91,7 +99,8 @@ const ContactComponant = ({ title }: { title?: string }) => {
       setSubject("");
       setDetails("");
     } catch (error) {
-      console.log("Error during registration: ", error);
+      console.log("Error during contact submit: ", error);
+      setError("Something went wrong. Please try again.");
     }
     setSubmitting(false);
   };
