@@ -1,0 +1,176 @@
+{
+    "asset": {
+        "copyright": "2024 (c) Adobe Inc.",
+        "generator": "Adobe Substance 3D Stager - cf02bd4e1102092a0805c8f8fc279a2093662f5f",
+        "version": "2.0"
+    },
+    "accessors": [
+        {
+            "bufferView": 0,
+            "componentType": 5126,
+            "count": 22094,
+            "type": "VEC3",
+            "max": [
+                1.8908462524414063,
+                2.995534896850586,
+                0.25146326422691347
+            ],
+            "min": [
+                -30.950321197509767,
+                -19.57610321044922,
+                -23.368221282958986
+            ]
+        },
+        {
+            "bufferView": 1,
+            "componentType": 5126,
+            "count": 22094,
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 2,
+            "componentType": 5126,
+            "count": 22094,
+            "type": "VEC4"
+        },
+        {
+            "bufferView": 3,
+            "componentType": 5126,
+            "count": 22094,
+            "type": "VEC2"
+        },
+        {
+            "bufferView": 4,
+            "componentType": 5125,
+            "count": 124416,
+            "type": "SCALAR",
+            "max": [
+                22093.0
+            ],
+            "min": [
+                0.0
+            ]
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteOffset": 0,
+            "byteLength": 265128,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 265128,
+            "byteLength": 265128,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 530256,
+            "byteLength": 353504,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 883760,
+            "byteLength": 176752,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 1060512,
+            "byteLength": 497664,
+            "target": 34963
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 1558176,
+            "uri": "Glass05_binary.bin"
+        }
+    ],
+    "materials": [
+        {
+            "pbrMetallicRoughness": {
+                "metallicFactor": 0.0,
+                "roughnessFactor": 0.0
+            },
+            "name": "water_material",
+            "doubleSided": true,
+            "extensions": {
+                "KHR_materials_transmission": {
+                    "transmissionFactor": 1
+                },
+                "KHR_materials_volume": {
+                    "thicknessFactor": 0
+                },
+                "KHR_materials_ior": {
+                    "ior": 1.3300000429153443
+                }
+            }
+        }
+    ],
+    "meshes": [
+        {
+            "name": "Cube_n3d",
+            "primitives": [
+                {
+                    "attributes": {
+                        "POSITION": 0,
+                        "NORMAL": 1,
+                        "TANGENT": 2,
+                        "TEXCOORD_0": 3
+                    },
+                    "indices": 4,
+                    "material": 0
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "name": "working_cam_n3d"
+        },
+        {
+            "children": [
+                2
+            ],
+            "name": "Glass BDSF2_n3d"
+        },
+        {
+            "translation": [
+                0.08298858255147934,
+                0.7984741926193237,
+                0.06617621332406998
+            ],
+            "rotation": [
+                0.0,
+                -0.004611016716808081,
+                0.0,
+                0.99998939037323
+            ],
+            "scale": [
+                0.8219296336174011,
+                0.8219294548034668,
+                0.8219296336174011
+            ],
+            "mesh": 0,
+            "name": "Cube_n3d"
+        }
+    ],
+    "scenes": [
+        {
+            "nodes": [
+                1
+            ],
+            "name": "scene"
+        }
+    ],
+    "scene": 0,
+    "extensionsUsed": [
+        "KHR_materials_transmission",
+        "KHR_materials_volume",
+        "KHR_materials_ior"
+    ]
+}

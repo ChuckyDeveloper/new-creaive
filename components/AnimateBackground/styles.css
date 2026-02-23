@@ -1,0 +1,76 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "ROBOTO", sans-serif;
+}
+
+.nav,
+.slider {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  position: relative;
+  text-align: start;
+}
+
+.nav h1,
+.slider h1 {
+  font-family: "unitea", sans-serif;
+  font: bold;
+  font-weight: 800;
+  font-size: 5vw;
+  margin: 0;
+  padding-bottom: 0.5rem;
+  letter-spacing: 0.4rem;
+  transition: all 0.3s ease;
+  z-index: -50;
+}
+
+h1:hover {
+  transform: translate3d(0, -10px, 22px);
+  color: #47C2CB;
+}
+
+.slider h2 {
+  font-size: 2vw;
+  letter-spacing: 0.1rem;
+  font-family: "ROBOTO", sans-serif;
+  font-weight: 300;
+  color: #faebd7;
+  z-index: -50;
+}
+
+h3.span {
+  font-size: 1vw;
+  letter-spacing: 0.1em;
+  font-family: "ROBOTO", sans-serif;
+  font-weight: 300;
+  color: #faebd7;
+  z-index: 50;
+}
+
+/* span:hover {
+  color: #782a90;
+  font-weight: 500;
+  font-size: 2.2vw;
+} */
+
+h3.spanx {
+  font-size: 1.2vw;
+  font: bold;
+  letter-spacing: 0.1em;
+  font-family: "ROBOTO", sans-serif;
+  font-weight: 700;
+  color: #782a90;
+  z-index: 4;
+}
+/* span:hover {
+  color: #782a90;
+  font-weight: 500;
+  font-size: 1.8vw;
+} */

@@ -1,0 +1,257 @@
+@layer utilities {
+  .font-Unitea {
+    font-family: "Unitea";
+    src: url("../public/fonts/Unitea/Unitea Sans-VF.ttf") format("truetype");
+  }
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@media (prefers-color-scheme: dark) {
+  :root {
+  }
+}
+
+body {
+  padding-top: 0;
+  padding: 0;
+  margin: 0;
+  background-color: #050810;
+  position: relative;
+}
+
+/* Selection color */
+::selection {
+  background: rgba(120, 42, 144, 0.35);
+  color: #fff;
+}
+
+@keyframes slide-drop {
+  from {
+    top: -200vh;
+  }
+  to {
+    top: 0;
+  }
+}
+
+@keyframes slide-top {
+  from {
+    opacity: 100;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .gradienL {
+    -webkit-mask-image: linear-gradient(
+      to left,
+      rgba(0, 0, 0, 100),
+      rgb(0, 0, 0, 80),
+      rgba(0, 0, 0, 0)
+    );
+    /* -webkit-mask-position: left top, left bottom; */
+    -webkit-mask-size: 60% 60% 60%;
+  }
+
+  .gradienT2B {
+    -webkit-mask-image: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 100),
+      rgb(0, 0, 0, 80),
+      rgba(0, 0, 0, 0)
+    );
+    /* -webkit-mask-position: left top, left bottom; */
+    -webkit-mask-size: 60% 60% 60%;
+  }
+
+  .gradienB2T {
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 100),
+      rgb(0, 0, 0, 80),
+      rgba(0, 0, 0, 0)
+    );
+    /* -webkit-mask-position: left top, left bottom; */
+    -webkit-mask-size: 60% 60% 60%;
+  }
+
+  .gradienL2R {
+    -webkit-mask-image: linear-gradient(
+      to left,
+      rgba(0, 0, 0, 0),
+      rgb(0, 0, 0, 100),
+      rgba(0, 0, 0, 100),
+      rgba(0, 0, 0, 0)
+    );
+    /* -webkit-mask-position: left top, left bottom; */
+    -webkit-mask-size: 2% 96% 2%;
+  }
+
+  .gradienRadal {
+    -webkit-mask-image: linear-gradient(
+      to left,
+      rgba(0, 0, 0, 0),
+      rgb(0, 0, 0, 100),
+      rgba(0, 0, 0, 100),
+      rgba(0, 0, 0, 0)
+    );
+  }
+
+  .navMobileIn {
+    animation: slide-drop 0.3s linear;
+  }
+
+  .navMobileOut {
+    animation: slide-top 1s linear;
+  }
+}
+
+/* Home Animate */
+.large-header {
+  position: relative;
+  width: auto;
+  /* height: 400vh; */
+  /* background: #782a90; */
+  overflow: hidden;
+  background-size: cover;
+  background-position: center center;
+  z-index: -10;
+}
+
+#large-header {
+  /* background-image: url('https://www.marcoguglie.it/Codepen/AnimatedHeaderBg/demo-1/img/demo-1-bg.jpg'); */
+  /* height: 100%;
+  position:absolute */
+}
+
+.main-title {
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  color: #782a90;
+  text-align: center;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate3d(-50%, -50%, 0);
+  transform: translate3d(-50%, -50%, 0);
+}
+
+.demo-1 .main-title {
+  text-transform: uppercase;
+  font-size: 4.2em;
+  letter-spacing: 0.1em;
+}
+
+.main-title .thin {
+  font-weight: 200;
+}
+
+@media only screen and (max-width: 768px) {
+  .demo-1 .main-title {
+    font-size: 3em;
+  }
+}
+
+/* Max Width Container */
+.container {
+  @apply xl:max-w-[1440px] mx-auto;
+}
+
+/* Buttons */
+.ButtonPrimary {
+  @apply w-full h-[50px] bg-white rounded-[20px]   text-black text-lg font-bold uppercase hover:bg-black hover:text-white hover:border-white hover:border-2;
+}
+
+.ButtonPrimaryKeepHover {
+  @apply w-full h-[50px] rounded-[20px]   text-lg font-bold uppercase bg-black text-white border-white border-2 hover:bg-white hover:text-black;
+}
+
+.ButtonSecondary {
+  @apply w-full h-[50px] bg-secondaryDark-0 rounded-[20px]   text-white text-lg font-bold uppercase hover:bg-black hover:text-secondaryDark-0 hover:border-secondaryDark-0 hover:border-2;
+}
+
+.ButtonSecondaryKeepHover {
+  @apply w-full h-[50px] rounded-[20px]   text-lg text-secondaryDark-0 font-bold uppercase hover:bg-secondaryDark-0 hover:text-white border-2 border-secondaryDark-0 hover:border-2;
+}
+
+/* globals.css */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+.hide-scrollbar {
+  -ms-overflow-style: none; /* IE/Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* ── Shimmer skeleton loader ── */
+@keyframes shimmer {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+/* ── Scroll-reveal: fade-in + slide-up ── */
+.reveal-section {
+  opacity: 0;
+  transform: translateY(40px) scale(0.98);
+  transition:
+    opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+.reveal-section.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Stagger children when parent becomes visible */
+.reveal-section.is-visible > *:nth-child(1) {
+  transition-delay: 0ms;
+}
+.reveal-section.is-visible > *:nth-child(2) {
+  transition-delay: 100ms;
+}
+.reveal-section.is-visible > *:nth-child(3) {
+  transition-delay: 200ms;
+}
+.reveal-section.is-visible > *:nth-child(4) {
+  transition-delay: 300ms;
+}
+.reveal-section.is-visible > *:nth-child(5) {
+  transition-delay: 400ms;
+}
+
+/* ── Smooth scroll for the whole page ── */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ── Chat message fade-slide-up ── */
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

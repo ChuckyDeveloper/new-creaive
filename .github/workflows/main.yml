@@ -1,0 +1,198 @@
+name: DEPLOY TO CREAIVE SERVER
+
+on:
+  push:
+    branches: ["production"]
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    environment: production
+
+    env:
+      # Vars (non-secret)
+      APP_DIR: ${{ vars.APP_DIR }}
+      BRANCH: ${{ vars.BRANCH }}
+      REPO_SSH_URL: ${{ vars.REPO_SSH_URL }}
+      SITE_URL: ${{ vars.SITE_URL }}
+      NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL }}
+
+      # Secrets presence flags (avoid using secrets directly in if:)
+      HAS_SSH_KEY: ${{ secrets.SSH_KEY != '' }}
+      HAS_SSH_PASSWORD: ${{ secrets.SSH_PASSWORD != '' }}
+      HAS_HOST: ${{ secrets.SSH_HOST != '' }}
+      HAS_USER: ${{ secrets.SSH_USER != '' }}
+      HAS_PORT: ${{ secrets.SSH_PORT != '' }}
+
+    steps:
+      - name: Echo vars (safe)
+        shell: bash
+        run: |
+          echo "APP_DIR=${APP_DIR}"
+          echo "BRANCH=${BRANCH}"
+          echo "REPO_SSH_URL=${REPO_SSH_URL}"
+          echo "SITE_URL=${SITE_URL}"
+          echo "NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL}"
+
+      - name: Echo secrets presence (do not print values)
+        shell: bash
+        run: |
+          echo "HAS_HOST=${HAS_HOST}"
+          echo "HAS_USER=${HAS_USER}"
+          echo "HAS_PORT=${HAS_PORT}"
+          echo "HAS_SSH_KEY=${HAS_SSH_KEY}"
+          echo "HAS_SSH_PASSWORD=${HAS_SSH_PASSWORD}"
+
+      - name: Validate required secrets exist
+        shell: bash
+        run: |
+          set -e
+          [ "${HAS_HOST}" = "true" ] || { echo "Missing SSH_HOST secret"; exit 1; }
+          [ "${HAS_USER}" = "true" ] || { echo "Missing SSH_USER secret"; exit 1; }
+          [ "${HAS_PORT}" = "true" ] || { echo "Missing SSH_PORT secret"; exit 1; }
+          if [ "${HAS_SSH_KEY}" != "true" ] && [ "${HAS_SSH_PASSWORD}" != "true" ]; then
+            echo "Provide SSH_KEY or SSH_PASSWORD in environment secrets"; exit 1;
+          fi
+
+      # - name: Preflight DNS & TCP reachability
+      #   shell: bash
+      #   run: |
+      #     set -e
+      #     HOST="${{ secrets.SSH_HOST }}"
+      #     PORT="${{ secrets.SSH_PORT }}"
+      #     echo "Checking DNS for host..."
+      #     if command -v getent >/dev/null 2>&1; then
+      #       getent hosts "$HOST" || { echo "DNS resolution failed (getent)"; exit 1; }
+      #     else
+      #       command -v nslookup >/dev/null 2>&1 && nslookup "$HOST" || { echo "DNS resolution failed (nslookup)"; exit 1; }
+      #     fi
+      #     echo "Checking TCP reachability to host:port"
+      #     n=1; ok=0
+      #     while [ $n -le 5 ]; do
+      #       if nc -z -w5 "$HOST" "$PORT"; then ok=1; break; fi
+      #       echo "Attempt $n failed; retrying..."; n=$((n+1)); sleep 3
+      #     done
+      #     [ "$ok" = "1" ] || { echo "Cannot reach $HOST:$PORT"; exit 1; }
+
+      - name: SSH smoke test (key)
+        if: ${{ env.HAS_SSH_KEY == 'true' }}
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            set -e
+            echo "[remote] whoami=$(whoami)"
+            echo "[remote] uname=$(uname -a)"
+            echo "[remote] pwd=$(pwd)"
+
+      - name: Deploy (key) git pull && npm i && build && pm2 restart
+        if: ${{ env.HAS_SSH_KEY == 'true' }}
+        uses: appleboy/ssh-action@v1.2.0
+        env:
+          APP_DIR: ${{ env.APP_DIR }}
+          BRANCH: ${{ env.BRANCH }}
+          REPO_SSH_URL: ${{ env.REPO_SSH_URL }}
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.SSH_KEY }}
+          envs: APP_DIR,BRANCH,REPO_SSH_URL
+          script: |
+            set -euo pipefail
+            echo "[remote] whoami=$(whoami)"
+            echo "[remote] pwd(before)=$(pwd)"
+            echo "[remote] APP_DIR=${APP_DIR:-<empty>}"
+            echo "[remote] BRANCH=${BRANCH:-<empty>}"
+            echo "[remote] REPO_SSH_URL=${REPO_SSH_URL:-<empty>}"
+            test -n "${APP_DIR:-}" || { echo "APP_DIR is empty. Aborting."; exit 1; }
+
+            mkdir -p "$APP_DIR"
+            cd "$APP_DIR"
+            echo "[remote] pwd(after)=$(pwd)"
+
+            git config --global --add safe.directory "$APP_DIR" || true
+            if [ ! -d .git ]; then
+              git init
+              git remote add origin "$REPO_SSH_URL"
+            fi
+            git remote set-url origin "$REPO_SSH_URL" || true
+            git fetch --all --prune
+            git checkout -B "$BRANCH" || git checkout "$BRANCH" || true
+
+            git reset --hard "origin/${BRANCH}"
+
+            echo "[remote] Checking Node/npm/pm2 availability"
+            if ! command -v npm >/dev/null 2>&1 || ! command -v node >/dev/null 2>&1; then
+              echo "[remote] npm/node not found. Installing via nvm..."
+              export NVM_DIR="$HOME/.nvm"
+              if [ ! -s "$NVM_DIR/nvm.sh" ]; then
+                curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+              fi
+              . "$NVM_DIR/nvm.sh"
+              nvm install 22
+              nvm use 22
+              # Ensure PATH contains the selected Node bin
+              export PATH="$(dirname "$(nvm which 22)"):$PATH"
+            else
+              echo "[remote] Node/npm already present"
+            fi
+
+            if ! command -v pm2 >/dev/null 2>&1; then
+              echo "[remote] Installing pm2 globally"
+              npm i -g pm2
+            fi
+
+            echo "[remote] Versions:"; node -v; npm -v; pm2 -v || true
+
+            npm i
+            npm run build
+            pm2 restart all || true
+            pm2 save || true
+
+      # - name: SSH smoke test (password)
+      #   if: ${{ env.HAS_SSH_KEY != 'true' && env.HAS_SSH_PASSWORD == 'true' }}
+      #   uses: appleboy/ssh-action@v1.2.0
+      #   with:
+      #     host: ${{ secrets.SSH_HOST }}
+      #     username: ${{ secrets.SSH_USER }}
+      #     port: ${{ secrets.SSH_PORT }}
+      #     password: ${{ secrets.SSH_PASSWORD }}
+      #     script: |
+      #       set -e
+      #       echo "[remote] whoami=$(whoami)"
+      #       echo "[remote] uname=$(uname -a)"
+      #       echo "[remote] pwd=$(pwd)"
+
+      # - name: Deploy (password): git pull && npm i && build && pm2 restart
+      #   if: ${{ env.HAS_SSH_KEY != 'true' && env.HAS_SSH_PASSWORD == 'true' }}
+      #   uses: appleboy/ssh-action@v1.2.0
+      #   env:
+      #     APP_DIR: ${{ env.APP_DIR }}
+      #     BRANCH: ${{ env.BRANCH }}
+      #     REPO_SSH_URL: ${{ env.REPO_SSH_URL }}
+      #   with:
+      #     host: ${{ secrets.SSH_HOST }}
+      #     username: ${{ secrets.SSH_USER }}
+      #     port: ${{ secrets.SSH_PORT }}
+      #     password: ${{ secrets.SSH_PASSWORD }}
+      #     script: |
+      #       set -e
+      #       mkdir -p "$APP_DIR"
+      #       cd "$APP_DIR"
+      #       git config --global --add safe.directory "$APP_DIR" || true
+      #       if [ ! -d .git ]; then
+      #         git init
+      #         git remote add origin "$REPO_SSH_URL"
+      #       fi
+      #       git remote set-url origin "$REPO_SSH_URL" || true
+      #       git fetch --all --prune
+      #       git checkout -B "$BRANCH" || git checkout "$BRANCH" || true
+      #       git reset --hard "origin/${BRANCH}"
+      #       npm i
+      #       npm run build
+      #       pm2 restart all || true
+      #       pm2 save || true
