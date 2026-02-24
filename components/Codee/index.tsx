@@ -429,50 +429,55 @@ export default function CODEE() {
 
                 {/* Chat Messages */}
                 <div className="flex flex-col gap-3">
-                  {messages.map((msg) => {
-                    const isBot = msg.role === "assistant";
-                    return (
-                      <div
-                        key={msg.id}
-                        className={`codee-fade-in flex items-start gap-2.5 ${isBot ? "" : "flex-row-reverse"}`}
-                      >
-                        {/* Avatar */}
-                        {isBot && (
-                          <div className="flex h-7 w-7 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-[#782a90] to-[#47c2cb] shadow-md">
-                            <Image
-                              src="/creaive/codee.png"
-                              alt="CODEE"
-                              width={56}
-                              height={56}
-                              className="h-full w-full object-cover"
-                            />
-                          </div>
-                        )}
-
-                        {/* Bubble */}
+                  {messages
+                    .filter((m) => !(m.role === "assistant" && !m.content))
+                    .map((msg) => {
+                      const isBot = msg.role === "assistant";
+                      return (
                         <div
-                          className={`group relative max-w-[78%] rounded-2xl px-4 py-3 text-sm leading-relaxed transition-shadow ${
-                            isBot
-                              ? "rounded-tl-md bg-white/80 text-[#0e113f] shadow-sm backdrop-blur-sm hover:shadow-md"
-                              : "rounded-tr-md bg-gradient-to-br from-[#782a90] to-[#9355a6] text-white shadow-md shadow-[#782a90]/15 hover:shadow-lg"
-                          }`}
+                          key={msg.id}
+                          className={`codee-fade-in flex items-start gap-2.5 ${isBot ? "" : "flex-row-reverse"}`}
                         >
-                          <p className="whitespace-pre-line">{msg.content}</p>
-                          <span
-                            className={`mt-1.5 block text-[10px] ${isBot ? "text-[#0e113f]/30" : "text-white/50"}`}
-                          >
-                            {new Date(msg.createdAt).toLocaleTimeString([], {
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            })}
-                          </span>
-                        </div>
-                      </div>
-                    );
-                  })}
+                          {/* Avatar */}
+                          {isBot && (
+                            <div className="flex h-7 w-7 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-[#782a90] to-[#47c2cb] shadow-md">
+                              <Image
+                                src="/creaive/codee.png"
+                                alt="CODEE"
+                                width={56}
+                                height={56}
+                                className="h-full w-full object-cover"
+                              />
+                            </div>
+                          )}
 
-                  {/* Typing Indicator */}
-                  {isTyping && <TypingIndicator />}
+                          {/* Bubble */}
+                          <div
+                            className={`group relative max-w-[78%] rounded-2xl px-4 py-3 text-sm leading-relaxed transition-shadow ${
+                              isBot
+                                ? "rounded-tl-md bg-white/80 text-[#0e113f] shadow-sm backdrop-blur-sm hover:shadow-md"
+                                : "rounded-tr-md bg-gradient-to-br from-[#782a90] to-[#9355a6] text-white shadow-md shadow-[#782a90]/15 hover:shadow-lg"
+                            }`}
+                          >
+                            <p className="whitespace-pre-line">{msg.content}</p>
+                            <span
+                              className={`mt-1.5 block text-[10px] ${isBot ? "text-[#0e113f]/30" : "text-white/50"}`}
+                            >
+                              {new Date(msg.createdAt).toLocaleTimeString([], {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              })}
+                            </span>
+                          </div>
+                        </div>
+                      );
+                    })}
+
+                  {/* Typing Indicator — only while waiting for the first token */}
+                  {isTyping &&
+                    messages.some(
+                      (m) => m.role === "assistant" && !m.content,
+                    ) && <TypingIndicator />}
                 </div>
 
                 <div ref={messagesEndRef} />
