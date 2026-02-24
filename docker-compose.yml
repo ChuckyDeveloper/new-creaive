@@ -7,4 +7,21 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=production
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - MONGODB_URI=mongodb://mongo:27017/creaive
+      - ADMIN_SECRET=${ADMIN_SECRET}
+    depends_on:
+      mongo:
+        condition: service_started
     restart: unless-stopped
+
+  mongo:
+    image: mongo:7
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    restart: unless-stopped
+
+volumes:
+  mongo_data:
