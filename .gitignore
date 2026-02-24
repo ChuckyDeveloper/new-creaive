@@ -46,3 +46,7 @@ next-env.d.ts
 
 *note.txt
 *productcontent
+
+
+package-lock.json
+/package-lock.json

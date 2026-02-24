@@ -14,24 +14,6 @@ type ChatMessage = {
 /* ── Constants ── */
 const ASSISTANT_NAME = "CODEE";
 
-const MOCK_RESPONSES: Record<string, string> = {
-  "what is creaive?":
-    "CREAiVE is an AI platform that helps businesses create intelligent digital experiences. Whether it's AI Chatbots, AI Humans, AI Microsites, or AI Labs — everything is designed to enhance your brand communication. ✨",
-  "how is ai human used?":
-    "AI Human is a virtual representative that can interact like a real person! It can be used in various scenarios such as virtual receptionists, product presenters, or even AI tutors — all powered by advanced Generative AI technology 🤖",
-  "tell me about ai microsite":
-    "AI Microsite is a small AI-powered website that can be created in minutes! It's perfect for marketing campaigns, landing pages, or product showcases that can be customized to your needs 🌐",
-  "what can ai lab do?":
-    "AI Lab is a testing ground where you can easily create and experiment with AI models — from Text Generation, Image Recognition to Custom AI Solutions tailored for your business 🧪",
-  "tell me about holovue":
-    "HOLOVUE is a Holographic Display solution that integrates AI with 3D visualization, creating an immersive experience for events, retail, and exhibitions 🔮",
-  "pricing & timelines?":
-    "Pricing depends on the scope of work and selected modules. You can schedule a demo and discuss details with our team — we are happy to help plan according to your budget 💰\n\nClick the Request Demo button to schedule!",
-};
-
-const DEFAULT_RESPONSE =
-  "Thank you for your question! 😊 CODEE is still under development, but soon it will be able to answer a wide range of questions. Please try asking about CREAiVE's products!";
-
 const FAQ_LIST = [
   { emoji: "🚀", text: "What is CREAiVE?" },
   { emoji: "🤖", text: "How is AI Human used?" },
@@ -41,9 +23,9 @@ const FAQ_LIST = [
   { emoji: "💰", text: "Pricing & timelines?" },
 ];
 
-function getMockResponse(message: string): string {
-  const key = message.toLowerCase().trim();
-  return MOCK_RESPONSES[key] || DEFAULT_RESPONSE;
+/* ── Generate a new session id for each page load ── */
+function createSessionId(): string {
+  return `sess-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
 }
 
 /* ── Typing dots component ── */
@@ -89,6 +71,8 @@ export default function CODEE() {
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
+  const abortRef = useRef<AbortController | null>(null);
+  const sessionIdRef = useRef<string>(createSessionId());
 
   /* ── Scroll to bottom ── */
   const scrollToBottom = useCallback(() => {
@@ -108,7 +92,7 @@ export default function CODEE() {
     }
   }, [isOpen]);
 
-  /* ── Send message (mock) ── */
+  /* ── Send message with streaming ── */
   const sendMessage = useCallback(
     async (content: string) => {
       const trimmed = content.trim();
@@ -121,37 +105,115 @@ export default function CODEE() {
         createdAt: new Date().toISOString(),
       };
 
-      setMessages((prev) => [...prev, userMsg]);
-      setInputValue("");
-      setIsTyping(true);
-
-      // Simulate AI response delay
-      const delay = 800 + Math.random() * 1200;
-      await new Promise((r) => setTimeout(r, delay));
-
+      // Create a placeholder for the assistant message
+      const assistantId = `assistant-${Date.now()}`;
       const assistantMsg: ChatMessage = {
-        id: `assistant-${Date.now()}`,
+        id: assistantId,
         role: "assistant",
-        content: getMockResponse(trimmed),
+        content: "",
         createdAt: new Date().toISOString(),
       };
 
-      setMessages((prev) => [...prev, assistantMsg]);
-      setIsTyping(false);
+      setMessages((prev) => [...prev, userMsg, assistantMsg]);
+      setInputValue("");
+      setIsTyping(true);
 
-      if (!isOpen) {
-        setUnreadCount((prev) => prev + 1);
+      // Abort any previous request
+      abortRef.current?.abort();
+      const controller = new AbortController();
+      abortRef.current = controller;
+
+      try {
+        // Build conversation history for context (last 20 messages)
+        const history = [...messages, userMsg]
+          .slice(-20)
+          .map((m) => ({ role: m.role, content: m.content }));
+
+        const res = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            messages: history,
+            sessionId: sessionIdRef.current,
+          }),
+          signal: controller.signal,
+        });
+
+        if (!res.ok) {
+          throw new Error(`API error: ${res.status}`);
+        }
+
+        const reader = res.body?.getReader();
+        if (!reader) throw new Error("No response body");
+
+        const decoder = new TextDecoder();
+        let buffer = "";
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          buffer += decoder.decode(value, { stream: true });
+
+          // Process SSE lines
+          const lines = buffer.split("\n");
+          buffer = lines.pop() || ""; // keep incomplete line in buffer
+
+          for (const line of lines) {
+            const trimmedLine = line.trim();
+            if (!trimmedLine.startsWith("data: ")) continue;
+
+            try {
+              const data = JSON.parse(trimmedLine.slice(6));
+
+              if (data.done) break;
+              if (data.error) throw new Error(data.error);
+
+              if (data.content) {
+                // Append token to the assistant message
+                setMessages((prev) =>
+                  prev.map((m) =>
+                    m.id === assistantId
+                      ? { ...m, content: m.content + data.content }
+                      : m,
+                  ),
+                );
+              }
+            } catch {
+              // skip malformed JSON lines
+            }
+          }
+        }
+      } catch (err: unknown) {
+        if (err instanceof DOMException && err.name === "AbortError") return;
+
+        // Show error in the assistant bubble
+        setMessages((prev) =>
+          prev.map((m) =>
+            m.id === assistantId
+              ? {
+                  ...m,
+                  content:
+                    m.content ||
+                    "ขออภัย เกิดข้อผิดพลาดในการเชื่อมต่อ กรุณาลองใหม่อีกครั้ง 🙏",
+                }
+              : m,
+          ),
+        );
+      } finally {
+        setIsTyping(false);
+        if (!isOpen) {
+          setUnreadCount((prev) => prev + 1);
+        }
       }
     },
-    [isTyping, isOpen],
+    [isTyping, isOpen, messages],
   );
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!inputValue.trim()) return;
-
-    console.log("User input:", inputValue);
-    // void sendMessage(inputValue);
+    void sendMessage(inputValue);
   };
 
   const handleFaqClick = useCallback(
