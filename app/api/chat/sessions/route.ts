@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { getDb } from "@/lib/mongodb";
 
+export const dynamic = "force-dynamic";
+
 /** GET /api/chat/sessions — list unique sessions with message counts */
 export async function GET(req: Request) {
   try {
