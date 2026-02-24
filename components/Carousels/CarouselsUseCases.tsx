@@ -26,11 +26,6 @@ const VDOCard = ({ text, vdo }: { text: string; vdo: string }) => {
 const CarouselsUseCases: React.FC<CarouselProps> = ({ children }) => {
   return (
     <Carousel
-      placeholder={undefined}
-      onResize={undefined}
-      onResizeCapture={undefined}
-      onPointerEnterCapture={undefined}
-      onPointerLeaveCapture={undefined}
       autoplay={true}
       loop={true}
       autoplayDelay={10000}

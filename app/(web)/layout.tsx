@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import Footer from "../../components/layout/footer";
 import Nav from "../../components/layout/nav";
+import Codee from "@/components/Codee";
 
 const CODEE = dynamic(() => import("@/components/Codee"), {
   ssr: false,
@@ -14,16 +15,8 @@ export default function Layout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [showAssistant, setShowAssistant] = useState(false);
+  const [showAssistant, setShowAssistant] = useState(true);
   const pathname = usePathname();
-
-  /* ── Delay chatbot widget load ── */
-  useEffect(() => {
-    const timer = window.setTimeout(() => {
-      setShowAssistant(true);
-    }, 3500);
-    return () => window.clearTimeout(timer);
-  }, []);
 
   /* ── Scroll-reveal observer — re-runs on every route change ── */
   useEffect(() => {
@@ -99,7 +92,7 @@ export default function Layout({
       <Nav />
       {children}
       <Footer />
-      {showAssistant ? <CODEE /> : null}
+      <Codee />
     </div>
   );
 }

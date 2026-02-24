@@ -84,11 +84,6 @@ const CarouselsPreviewRola: React.FC = ({}) => {
       autoplayDelay={15000}
       transition={{ duration: 15 }}
       className="max-h-[800px] xl:max-h-[600px] no-scrollbar gradienL2R py-8"
-      placeholder={undefined}
-      onResize={undefined}
-      onResizeCapture={undefined}
-      onPointerEnterCapture={undefined}
-      onPointerLeaveCapture={undefined}
     >
       <div className="flex w-auto">
         <Card image={aimodels[1]} />

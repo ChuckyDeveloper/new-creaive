@@ -215,10 +215,6 @@ export default function Navbar() {
                 <span className="block text-[13px] font-semibold tracking-wide text-white/90 mb-1">
                   {link.title}
                 </span>
-                <IoIosArrowForward
-                  size={14}
-                  className="text-complementary-500/60 group-active:text-complementary-500 transition-colors"
-                />
               </Link>
             ))}
           </div>

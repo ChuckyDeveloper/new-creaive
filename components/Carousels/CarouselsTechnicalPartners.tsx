@@ -34,11 +34,6 @@ const CarouselsTechnicalPartners: React.FC = ({}) => {
       autoplayDelay={5000}
       transition={{ duration: 5 }}
       className="xl:w-[500px] no-scrollbar gradienL2R m-auto"
-      placeholder={undefined}
-      onResize={undefined}
-      onResizeCapture={undefined}
-      onPointerEnterCapture={undefined}
-      onPointerLeaveCapture={undefined}
     >
       <Card img="/partners/Partners Logo 01.png" />
       <Card img="/partners/Partners Logo 02.png" />
