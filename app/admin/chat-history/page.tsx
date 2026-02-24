@@ -176,9 +176,7 @@ export default function AdminChatHistory() {
       <header className="border-b border-white/10 bg-white/5 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <div>
-            <h1 className="text-xl font-bold">
-              💬 CODEE Chat History
-            </h1>
+            <h1 className="text-xl font-bold">💬 CODEE Chat History</h1>
             <p className="text-sm text-white/40">Admin Dashboard</p>
           </div>
           <div className="flex items-center gap-4">
@@ -291,9 +289,7 @@ export default function AdminChatHistory() {
                           <th className="px-4 py-3 font-medium">
                             ข้อความผู้ใช้
                           </th>
-                          <th className="px-4 py-3 font-medium">
-                            คำตอบ CODEE
-                          </th>
+                          <th className="px-4 py-3 font-medium">คำตอบ CODEE</th>
                           <th className="px-4 py-3 font-medium w-20">
                             Actions
                           </th>
@@ -395,7 +391,9 @@ export default function AdminChatHistory() {
 
                   <div className="space-y-4 text-sm">
                     <div>
-                      <label className="text-xs text-white/40">Session ID</label>
+                      <label className="text-xs text-white/40">
+                        Session ID
+                      </label>
                       <p className="mt-1 font-mono text-xs text-white/60 break-all">
                         {selectedChat.sessionId}
                       </p>
@@ -403,7 +401,9 @@ export default function AdminChatHistory() {
                     <div>
                       <label className="text-xs text-white/40">เวลา</label>
                       <p className="mt-1 text-white/60">
-                        {new Date(selectedChat.createdAt).toLocaleString("th-TH")}
+                        {new Date(selectedChat.createdAt).toLocaleString(
+                          "th-TH",
+                        )}
                       </p>
                     </div>
                     <div>
@@ -434,7 +434,9 @@ export default function AdminChatHistory() {
                     </div>
 
                     <div>
-                      <label className="text-xs text-white/40">User Agent</label>
+                      <label className="text-xs text-white/40">
+                        User Agent
+                      </label>
                       <p className="mt-1 text-[10px] text-white/30 break-all leading-relaxed">
                         {selectedChat.userAgent}
                       </p>
