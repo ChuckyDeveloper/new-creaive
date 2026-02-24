@@ -2,9 +2,16 @@ import { NextRequest } from "next/server";
 import OpenAI from "openai";
 import { getDb } from "@/lib/mongodb";
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+export const dynamic = "force-dynamic";
+
+/** Lazy-init so the constructor doesn't throw during `next build` (no env vars at build time) */
+let _openai: OpenAI | null = null;
+function getOpenAI(): OpenAI {
+  if (!_openai) {
+    _openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  }
+  return _openai;
+}
 
 const SYSTEM_PROMPT = `You are CODEE, a friendly and knowledgeable AI assistant for CREAiVE — an AI platform that helps businesses create intelligent digital experiences.
 
@@ -66,7 +73,7 @@ export async function POST(req: NextRequest) {
     ];
 
     // Create streaming response
-    const stream = await openai.chat.completions.create({
+    const stream = await getOpenAI().chat.completions.create({
       model: "gpt-4o",
       messages: openaiMessages,
       stream: true,
