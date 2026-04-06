@@ -27,6 +27,10 @@ COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
+# Writable directory for popup uploads (survives container restarts via volume)
+RUN mkdir -p /app/persistent/uploads && chown -R nextjs:nodejs /app/persistent
+ENV PERSIST_DIR=/app/persistent
+
 USER nextjs
 EXPOSE 3000
 

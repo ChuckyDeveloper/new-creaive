@@ -5,6 +5,11 @@ const nextConfig = {
   reactStrictMode: false,
   staticPageGenerationTimeout: 1000,
   output: "standalone",
+  images: {
+    formats: ["image/avif", "image/webp"],
+  },
+  compress: true,
+  poweredByHeader: false,
 };
 
 export default nextConfig;

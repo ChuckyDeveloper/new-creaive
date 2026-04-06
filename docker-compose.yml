@@ -10,9 +10,12 @@ services:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - MONGODB_URI=mongodb://mongo:27017/creaive
       - ADMIN_SECRET=${ADMIN_SECRET}
+      - PERSIST_DIR=/app/persistent
     depends_on:
       mongo:
         condition: service_started
+    volumes:
+      - popup-data:/app/persistent
     restart: unless-stopped
 
   mongo:
@@ -25,3 +28,4 @@ services:
 
 volumes:
   mongo_data:
+  popup-data:

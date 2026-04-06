@@ -39,6 +39,7 @@ const Footer = () => {
             src="/creaive/Creaive Logo Final 06.png"
             className="w-[100px] mb-10 opacity-80"
             alt="CREAiVE"
+            loading="lazy"
           />
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">

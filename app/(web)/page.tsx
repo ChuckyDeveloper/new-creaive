@@ -1,8 +1,10 @@
 import dynamic from "next/dynamic";
 
-import ContactComponant from "@/components/Contact";
 import ContainerPage from "@/components/layout/containerPage";
-import FecilitateComponent from "@/components/Scheduler";
+
+const PopupBanner = dynamic(() => import("@/components/PopupBanner"), {
+  ssr: false,
+});
 
 /* ── Above-the-fold: load immediately ── */
 const AnimatedBackground = dynamic(
@@ -64,6 +66,13 @@ const OurTechPartners = dynamic(
   },
 );
 
+const ContactComponant = dynamic(() => import("@/components/Contact"), {
+  ssr: false,
+  loading: () => (
+    <div className={`h-[300px] rounded-2xl bg-white/[0.02] ${shimmer}`} />
+  ),
+});
+
 /* ── Accent divider variants ── */
 function SectionDivider({
   variant = "default",
@@ -114,6 +123,9 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 export default function Home() {
   return (
     <>
+      {/* ── Popup Banner ── */}
+      <PopupBanner />
+
       {/* ── Ambient glow (fixed, GPU-composited) ── */}
       <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
         <div className="absolute -top-40 left-1/2 h-[700px] w-[700px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(71,194,203,0.08)_0%,transparent_70%)]" />

@@ -24,17 +24,22 @@ const CardScreen: React.FC<CardProps> = ({
     <div className="flex h-full rounded-[20px] p-4  ">
       <div className="grid grid-cols-1 xl:grid-cols-3 w-full xl:gap-4 ">
         <div className="items-start justify-start w-full h-full rounded-[20px] col-span-2">
-          <img src="/HOLOVUE Logo Light.png" className="w-[50%] m-auto"></img>
+          <img
+            src="/HOLOVUE Logo Light.png"
+            className="w-[50%] m-auto"
+            loading="lazy"
+            alt="Holovue"
+          />
           <div className="pt-2 xl:text-justify text-[16px] xl:text-[20px] leading-5 font-unitea text-justify lg:text-center md:w-[80%] m-auto">
-            We are the leading experts in using AI and
-            3D technology to create visually engaging content. Through a mixture
-            of the latest technologies, our vision is to bring holographic
-            experiences to everyone. Holographic communication is an innovative
-            channel to drive user awareness, activation and engagement,
-            ultimately driving a memorable and unique experience wherever you
-            are. Brands and companies are using Holographic technology to
-            deliver a truly lifelike, lifesize, realtime or scheduled,
-            volumetric digital experiences!
+            We are the leading experts in using AI and 3D technology to create
+            visually engaging content. Through a mixture of the latest
+            technologies, our vision is to bring holographic experiences to
+            everyone. Holographic communication is an innovative channel to
+            drive user awareness, activation and engagement, ultimately driving
+            a memorable and unique experience wherever you are. Brands and
+            companies are using Holographic technology to deliver a truly
+            lifelike, lifesize, realtime or scheduled, volumetric digital
+            experiences!
           </div>
           <div className="col-span-1 lg:w-[220px] py-[8vh] md:w-[80%] m-auto">
             <Buttons
