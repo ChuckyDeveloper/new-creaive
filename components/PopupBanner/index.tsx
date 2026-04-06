@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
 
 interface PopupData {
   enabled: boolean;
@@ -74,14 +73,11 @@ export default function PopupBanner() {
 
         {/* ── Image ── */}
         <div className="overflow-hidden rounded-2xl border border-white/10 shadow-2xl shadow-black/50">
-          <Image
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
             src={data.imageUrl}
             alt="Popup Banner"
-            width={1200}
-            height={800}
             className="h-auto w-full object-contain"
-            unoptimized
-            priority
           />
         </div>
       </div>

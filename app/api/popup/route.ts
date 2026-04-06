@@ -2,12 +2,27 @@ import { NextRequest, NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
 
-const DATA_FILE = path.join(process.cwd(), "data", "popup.json");
-const UPLOAD_DIR = path.join(process.cwd(), "public", "uploads");
+/*
+ * Use a persistent volume directory instead of process.cwd()/public
+ * so uploaded files survive container rebuilds.
+ *
+ * In Docker we mount a volume at /app/persistent.
+ * In local dev, fall back to <project>/persistent.
+ */
+const PERSIST_DIR =
+  process.env.PERSIST_DIR || path.join(process.cwd(), "persistent");
+const DATA_FILE = path.join(PERSIST_DIR, "popup.json");
+const UPLOAD_DIR = path.join(PERSIST_DIR, "uploads");
 
 interface PopupData {
   enabled: boolean;
   imageUrl: string;
+}
+
+function ensureDirs() {
+  if (!fs.existsSync(PERSIST_DIR))
+    fs.mkdirSync(PERSIST_DIR, { recursive: true });
+  if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 }
 
 function readData(): PopupData {
@@ -20,8 +35,7 @@ function readData(): PopupData {
 }
 
 function writeData(data: PopupData) {
-  const dir = path.dirname(DATA_FILE);
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+  ensureDirs();
   fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), "utf-8");
 }
 
@@ -41,14 +55,12 @@ export async function POST(req: NextRequest) {
     const data = readData();
 
     if (file && file.size > 0) {
-      // Ensure upload dir exists
-      if (!fs.existsSync(UPLOAD_DIR))
-        fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+      ensureDirs();
 
-      // Remove old image if exists
+      // Remove old file if exists
       if (data.imageUrl) {
-        const oldPath = path.join(process.cwd(), "public", data.imageUrl);
-        if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
+        const oldFile = path.join(UPLOAD_DIR, path.basename(data.imageUrl));
+        if (fs.existsSync(oldFile)) fs.unlinkSync(oldFile);
       }
 
       // Save new image
@@ -56,10 +68,10 @@ export async function POST(req: NextRequest) {
       const buffer = Buffer.from(bytes);
       const ext = path.extname(file.name) || ".png";
       const filename = `popup-${Date.now()}${ext}`;
-      const filepath = path.join(UPLOAD_DIR, filename);
-      fs.writeFileSync(filepath, buffer);
+      fs.writeFileSync(path.join(UPLOAD_DIR, filename), buffer);
 
-      data.imageUrl = `/uploads/${filename}`;
+      // Store as API-served path (not a static /public path)
+      data.imageUrl = `/api/popup/image?f=${filename}`;
     }
 
     if (enabled !== null && enabled !== undefined) {
@@ -104,8 +116,13 @@ export async function DELETE() {
     const data = readData();
 
     if (data.imageUrl) {
-      const oldPath = path.join(process.cwd(), "public", data.imageUrl);
-      if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
+      // Extract filename from the API path
+      const url = new URL(data.imageUrl, "http://localhost");
+      const fname = url.searchParams.get("f");
+      if (fname) {
+        const oldFile = path.join(UPLOAD_DIR, fname);
+        if (fs.existsSync(oldFile)) fs.unlinkSync(oldFile);
+      }
     }
 
     const newData: PopupData = { enabled: false, imageUrl: "" };

@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 
 interface PopupData {
@@ -181,12 +180,11 @@ export default function PopupManagePage() {
             </button>
           </div>
           <div className="relative aspect-video w-full overflow-hidden rounded-xl border border-white/10 bg-black/40">
-            <Image
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
               src={data.imageUrl}
               alt="Popup image"
-              fill
-              className="object-contain"
-              unoptimized
+              className="absolute inset-0 h-full w-full object-contain"
             />
           </div>
         </div>
@@ -211,12 +209,11 @@ export default function PopupManagePage() {
           />
           {preview ? (
             <div className="relative h-48 w-full max-w-md overflow-hidden rounded-lg">
-              <Image
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
                 src={preview}
                 alt="Preview"
-                fill
-                className="object-contain"
-                unoptimized
+                className="absolute inset-0 h-full w-full object-contain"
               />
             </div>
           ) : (

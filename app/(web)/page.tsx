@@ -1,8 +1,6 @@
 import dynamic from "next/dynamic";
 
-import ContactComponant from "@/components/Contact";
 import ContainerPage from "@/components/layout/containerPage";
-import FecilitateComponent from "@/components/Scheduler";
 
 const PopupBanner = dynamic(() => import("@/components/PopupBanner"), {
   ssr: false,
@@ -67,6 +65,13 @@ const OurTechPartners = dynamic(
     ),
   },
 );
+
+const ContactComponant = dynamic(() => import("@/components/Contact"), {
+  ssr: false,
+  loading: () => (
+    <div className={`h-[300px] rounded-2xl bg-white/[0.02] ${shimmer}`} />
+  ),
+});
 
 /* ── Accent divider variants ── */
 function SectionDivider({

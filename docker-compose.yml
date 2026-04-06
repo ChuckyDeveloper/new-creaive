@@ -7,4 +7,10 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=production
+      - PERSIST_DIR=/app/persistent
+    volumes:
+      - popup-data:/app/persistent
     restart: unless-stopped
+
+volumes:
+  popup-data:

@@ -1,7 +1,13 @@
+/* ── Custom font ── */
+@font-face {
+  font-family: "Unitea";
+  src: url("../public/fonts/Unitea/Unitea Sans-VF.ttf") format("truetype");
+  font-display: swap;
+}
+
 @layer utilities {
   .font-Unitea {
-    font-family: "Unitea";
-    src: url("../public/fonts/Unitea/Unitea Sans-VF.ttf") format("truetype");
+    font-family: "Unitea", sans-serif;
   }
 }
 

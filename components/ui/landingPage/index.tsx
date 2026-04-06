@@ -1,13 +1,26 @@
 "use client";
+import dynamic from "next/dynamic";
 import {
   CarouselsRealWord,
   CarouselsTechnicalPartners,
   CarouselsUseCases,
 } from "../../../components/Carousels/Carousels";
-import { CardScreen, CardImage } from "../../../components/Cards";
+import { CardImage } from "../../../components/Cards";
 import TopicHeading from "../Heads/HeadLine";
 import GradientSplitHeading from "../Heads/HeadGradient";
-import Head from "next/head";
+
+/* ── Lazy-load CardScreen (pulls in Three.js ~600 KB) ── */
+const CardScreen = dynamic(
+  () => import("../../../components/Cards/CardsScreen"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex h-[500px] items-center justify-center rounded-2xl bg-white/[0.02]">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-white/10 border-t-primary-500" />
+      </div>
+    ),
+  },
+);
 
 export const RealWorldCase = () => {
   return (
@@ -39,6 +52,7 @@ export const RealWorldCase = () => {
                   className="w-full h-full rounded-2xl object-cover object-top"
                   src={`/ai-models/Aden 03.jpg`}
                   alt="Placeholder"
+                  loading="lazy"
                 />
               </div>
 
@@ -79,6 +93,7 @@ export const RealWorldCase = () => {
                   className="w-full h-full rounded-2xl object-cover "
                   src={`/ai-models/NIC 01.jpg`}
                   alt="Placeholder"
+                  loading="lazy"
                 />
               </div>
             </div>
@@ -107,6 +122,7 @@ export const RealWorldCase = () => {
                   className="w-full h-full rounded-2xl object-cover object-center"
                   src={`/ai-models/NISA 02.jpg`}
                   alt="Placeholder"
+                  loading="lazy"
                 />
               </div>
 
@@ -115,6 +131,7 @@ export const RealWorldCase = () => {
                   className="w-full h-full rounded-2xl object-cover object-center"
                   src={`/ai-models/Jane 02.jpg`}
                   alt="Placeholder"
+                  loading="lazy"
                 />
               </div>
             </div>
