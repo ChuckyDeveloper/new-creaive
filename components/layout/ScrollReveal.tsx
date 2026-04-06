@@ -12,11 +12,16 @@ export default function ScrollReveal() {
   const pathname = usePathname();
 
   useEffect(() => {
-    if (!("IntersectionObserver" in window)) return;
+    if (!("IntersectionObserver" in window)) {
+      // Fallback: make everything visible immediately
+      document
+        .querySelectorAll(".reveal-section")
+        .forEach((el) => el.classList.add("is-visible"));
+      return;
+    }
 
     let io: IntersectionObserver | null = null;
     let mo: MutationObserver | null = null;
-    let initTimer: number | null = null;
 
     const initRevealObserver = () => {
       io = new IntersectionObserver(
@@ -28,7 +33,7 @@ export default function ScrollReveal() {
             }
           });
         },
-        { rootMargin: "0px 0px -80px 0px", threshold: 0.05 },
+        { rootMargin: "0px 0px -40px 0px", threshold: 0.01 },
       );
 
       document
@@ -54,21 +59,10 @@ export default function ScrollReveal() {
       mo.observe(document.body, { childList: true, subtree: true });
     };
 
-    const scheduleInit = () => {
-      initTimer = window.setTimeout(() => {
-        requestAnimationFrame(initRevealObserver);
-      }, 100);
-    };
-
-    if (document.readyState === "complete") {
-      scheduleInit();
-    } else {
-      window.addEventListener("load", scheduleInit, { once: true });
-    }
+    // Run immediately — no delay needed
+    requestAnimationFrame(initRevealObserver);
 
     return () => {
-      if (initTimer !== null) clearTimeout(initTimer);
-      window.removeEventListener("load", scheduleInit);
       io?.disconnect();
       mo?.disconnect();
     };

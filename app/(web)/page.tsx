@@ -154,7 +154,7 @@ export default function Home() {
           </section>
         </ContainerPage>
         <SectionDivider variant="glow" />
-        ══════════ SHOWCASE ══════════
+        {/* ══════════  SHOWCASE  ══════════ */}
         <ContainerPage className="w-full h-auto relative max-w-[1280px] 2xl:max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8">
           <section className="reveal-section space-y-16 md:space-y-20">
             <SectionLabel>Showcase</SectionLabel>
